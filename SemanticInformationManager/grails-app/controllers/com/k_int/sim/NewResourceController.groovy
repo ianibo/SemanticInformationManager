@@ -1,6 +1,7 @@
 package com.k_int.sim
 
 import org.jrdf.*;
+import org.jrdf.graph.*;
 
 class NewResourceController {
 
