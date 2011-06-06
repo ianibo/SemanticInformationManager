@@ -1,0 +1,5 @@
+
+
+curl -H "Accept: application/rdf+json" --data-urlencode query@../../docs/useful_sparql/top_classes.sparql "http://localhost:9000/sparql/"
+curl -H "Accept: application/json" --data-urlencode query@../../docs/useful_sparql/top_classes.sparql "http://localhost:9000/sparql/"
+

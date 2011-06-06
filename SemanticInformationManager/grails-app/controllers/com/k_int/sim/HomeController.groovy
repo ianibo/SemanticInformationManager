@@ -23,6 +23,8 @@ class HomeController {
   def create = {
     def result = [:]
     result.user = authenticatedUser
+    result.new_resource_uri = "urn:uri:${java.util.UUID.randomUUID().toString()}"
+    println "Generated a new resource: ${result.new_resource_uri}"
     result
   }
 
