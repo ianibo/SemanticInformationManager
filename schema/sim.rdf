@@ -1,0 +1,16 @@
+<rdf:RDF
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+        xmlns:dc="http://purl.org/dc/elements/1.1/">
+
+  <rdfs:Class rdf:about="http://k-int.com/sim/0.1/QueryTemplate#Resource" rdfs:label="QueryTemplate" rdfs:comment="A SIM Query Template.">
+  </rdfs:Class>
+
+  <rdf:Property rdf:about="http://k-int.com/sim/0.1/QueryTemplate#Shortname">
+    <rdfs:isDefinedBy rdf:resource="http://k-int.com/sim/0.1/QueryTemplate#Resource"/>
+    <rdfs:label>Query Template Short name</rdfs:label>
+    <rdfs:comment>The short name for this template.</rdfs:comment>
+  </rdf:Property>
+
+</rdf:RDF>
+
