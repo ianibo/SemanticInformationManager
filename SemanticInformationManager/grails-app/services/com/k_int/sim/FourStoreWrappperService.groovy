@@ -2,7 +2,7 @@ package com.k_int.sim
 
 import grails.converters.*
 
-class 4StoreWrappperService {
+class FourStoreWrappperService {
 
   static transactional = true
 

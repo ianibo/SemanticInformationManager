@@ -7,13 +7,20 @@
     </head>
     <body>
 
-      <h1>Dashboard</h1>
-      <p>
-        This is your home dashboard... It tells you stuff you need to know....
-      </p>
-      <div style="margin-top:15px;">
-      </div>
+      <form>
+        <div id="resourceid">
+          Resource ID: <input type="text" name="resourceid" value="${new_resource_uri}" />
+        </div>
 
+        <div id="addclass">
+          This resource is-a :
+          <select name="addClass">
+            <option value="Widget">Widget</option>
+          </select>
+
+          <input type="submit" value="Add"/>
+        </div>
+      </form>
     </body>
 </html>
 

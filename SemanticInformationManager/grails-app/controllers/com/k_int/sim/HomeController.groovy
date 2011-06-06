@@ -21,6 +21,7 @@ class HomeController {
   }
 
   def create = {
+    println "Create"
     def result = [:]
     result.user = authenticatedUser
     result.new_resource_uri = "urn:uri:${java.util.UUID.randomUUID().toString()}"
@@ -29,6 +30,7 @@ class HomeController {
   }
 
   def search = {
+    println "Search"
     def result = [:]
     result.user = authenticatedUser
     result
