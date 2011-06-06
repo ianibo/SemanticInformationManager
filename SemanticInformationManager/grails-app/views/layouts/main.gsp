@@ -18,6 +18,15 @@
         <div class="yui3-g" id="simmainlayout">
 
           <div id="simnav" class="yui3-u">
+<ul>
+  <li><g:link controller="home" action="create">New Record</g:link></li>
+  <li>Search Templates
+    <ul>
+      <li>One</li>
+      <li>Two</li>
+    </ul>
+  </ul>
+</ul>
           </div>
 
           <div id="simmain" class="yui3-u">

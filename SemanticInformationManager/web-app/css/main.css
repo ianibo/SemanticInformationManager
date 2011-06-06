@@ -23,20 +23,21 @@ body {
     width: auto;
 }
 
-#iepmain {
+#simmain {
   width: 100%;
   margin: 5px;
-  /* border-radius: 5px;
+  border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  background: #f3f3f3; */
+  background: #f3f3f3;
+  padding: 10px;
 }
 
-#iepnav {
-    margin-left:-125px; /* "left col" width */
+#simnav {
+    margin-left:-245px; /* "left col" width */
     margin-top:5px;
     margin-bottom:5px;
-    width:100px;
+    width:200px;
 
     border-radius: 5px;
     -moz-border-radius: 5px;
@@ -48,8 +49,8 @@ body {
     padding: 10px;
 }
 
-#iepmainlayout {
-    padding-left:125px; /* "left col" width */ 
+#simmainlayout {
+    padding-left:245px; /* "left col" width */ 
     /* padding-right:150px; */ /* "right col" width */
 }
 
