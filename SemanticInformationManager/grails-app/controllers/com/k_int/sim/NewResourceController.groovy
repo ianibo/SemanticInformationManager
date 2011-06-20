@@ -6,6 +6,7 @@ import org.jrdf.graph.*;
 class NewResourceController {
 
     def index = {
+      prinlnt "New resource..."
       JRDFFactory jrdfFactory = SortedMemoryJRDFFactory.getFactory();
       Graph graph = jrdfFactory.getGraph();
       GraphElementFactory elementFactory = graph.getElementFactory();
