@@ -20,6 +20,7 @@
           <div id="simnav" class="yui3-u">
 <ul>
   <li><g:link controller="home" action="create">New Record</g:link></li>
+  <li><g:link controller="newSPARQLSearch" action="index">New Search</g:link></li>
   <li>Search Templates
     <ul>
       <li>One</li>
