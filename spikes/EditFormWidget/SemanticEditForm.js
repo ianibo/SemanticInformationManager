@@ -49,7 +49,11 @@ function buildFormPanel(layout_definition, parent_element) {
     // For(blah...)
 
     // Finally, output an empty control to act as a "Next" value (If permitted by cardinality rules)
-    var c = ul.append("<li><label for=\""+base_property_path+"["+i+"]\">"+propdef.label+"</label><input id=\""+base_property_path+"["+i+"]\" type=\"text\"/></li>")
+    var c = ul.append("<li><label for=\""+base_property_path+"["+i+"]\">"+
+                                    propdef.label+"</label><input id=\""+
+                                    base_property_path+"["+i+"]\" data-property-path=\""+
+                                    base_property_path+"\" data-property-idx=\""+
+                                    i+"\" onkeypress=\"updateModel(this);\" type=\"text\"/></li>")
   }
 
   // var data = $('<div id="'+tab_id+'"></div>').append(tab_content);
@@ -57,4 +61,8 @@ function buildFormPanel(layout_definition, parent_element) {
   // this.tabs.tabs('select', '#' + tab_id);
 
 
+}
+
+function updateModel(control) {
+  // alert("updateModel "+control.dataset["data-property-path"]);
 }
