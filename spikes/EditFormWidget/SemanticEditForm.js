@@ -45,7 +45,11 @@ function buildFormPanel(layout_definition, parent_element) {
 
   for ( p in layout_definition.properties ) {
 
+
     var propdef = layout_definition.properties[p];
+
+    // Make sure we have an object for this property in the model
+    the_model[propdef.property_uri] = {}
 
     var new_ul = $(document.createElement('ul'));
     var new_td = $(document.createElement('td'));
@@ -83,9 +87,9 @@ function controlUpdated(control) {
 
 
   alert("path:"+data_property_path);
-  var node = eval("the_model."+data_property_path);
+  var prop_model_info = the_model[data_property_path]
 
-  alert("node: "+node);
+  alert("node: "+prop_model_info);
 
   // Retrieve the model object from data_property_path - It should contain some metadata and an array of values
 }
