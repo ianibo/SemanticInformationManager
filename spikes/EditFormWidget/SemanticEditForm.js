@@ -9,9 +9,9 @@ function makeSIMEditor(editor_id) {
   alert("2");
   // Add the generic details tab
   // Working from http://jqueryui.com/demos/tabs/#...immediately_select_a_just_added_tab
-  //tab_control.tabs('add','#default',"Default Properties");
-  //tab_control.tabs('add','#t1',"Default Properties1");
-  //tab_control.tabs('add','#t2',"Default Properties2");
-  //tab_control.tabs('add','#t3',"Default Properties3");
+  tab_control.tabs('add','#default',"Default Properties");
+  tab_control.tabs('add','#t1',"Default Properties1");
+  tab_control.tabs('add','#t2',"Default Properties2");
+  tab_control.tabs('add','#t3',"Default Properties3");
   alert("Done");
 }
