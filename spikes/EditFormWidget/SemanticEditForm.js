@@ -1,4 +1,6 @@
 
+var the_model = {}
+
 var general_type_layout = {
   element_id : 'general_info_panel',
   tab_name : 'General',
@@ -60,7 +62,7 @@ function buildFormPanel(layout_definition, parent_element) {
     // For(blah...)
 
     // Finally, output an empty control to act as a "Next" value (If permitted by cardinality rules)
-    var cc = new_ul.append("<li><input id=\""+base_property_path+"["+i+"]\" data-property-path=\""+base_property_path+"\" data-property-idx=\""+i+"\" onkeypress=\"updateModel(this);\" type=\"text\"/></li>")
+    var cc = new_ul.append("<li><input id=\""+base_property_path+"["+i+"]\" data-property-path=\""+base_property_path+"\" data-property-idx=\""+i+"\" onkeypress=\"controlUpdated(this);\" type=\"text\"/></li>")
 
     // parent_element.append("</ul></td></tr>");
   }
@@ -74,6 +76,16 @@ function buildFormPanel(layout_definition, parent_element) {
 
 }
 
-function updateModel(control) {
+function controlUpdated(control) {
   // alert("updateModel "+control.dataset["data-property-path"]);
+  // Have we typed in to the last control in the list? If so, append a new blank control for the user to use when adding another value.. IF cardinality > 1
+  var data_property_path = control.getAttribute("data-property-path");
+
+
+  alert("path:"+data_property_path);
+  var node = eval("the_model."+data_property_path);
+
+  alert("node: "+node);
+
+  // Retrieve the model object from data_property_path - It should contain some metadata and an array of values
 }
