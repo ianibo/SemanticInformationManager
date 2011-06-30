@@ -85,7 +85,7 @@ function buildFormPanel(layout_definition, parent_element) {
     new_td.append(new_ul);
 
     // Append a row to the table for every property. Each row will support muiltiple values if cardinality says so
-    new_table.append($('<tr>').append("<td><label for=\""+base_property_path+"["+i+"]\">"+propdef.label+"</label></td>",new_td));
+    new_table.append($('<tr>').append("<td style=\"vertical-align: top\"><label for=\""+base_property_path+"["+i+"]\">"+propdef.label+"</label></td>",new_td));
 
     // Work out the root of the property name (The path to an array of values)
     var base_property_path = parent_context+propdef.property_uri
