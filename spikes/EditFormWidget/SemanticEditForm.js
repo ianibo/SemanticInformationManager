@@ -63,7 +63,8 @@ function buildFormPanel(layout_definition, parent_element) {
     if ( property_model == null ) {
       property_model = {
         '__metamodel' : {
-          property_value_containers : []
+          property_value_containers : [],
+          num_value_controls : 1
         },
         'values' : [
         ]
@@ -94,7 +95,7 @@ function buildFormPanel(layout_definition, parent_element) {
 
     // Finally, output an empty control to act as a "Next" value (If permitted by cardinality rules)
     // keydown to capture deletes etc keypress for only sensible keys
-    var cc = new_ul.append("<li><input id=\""+proppath+"["+i+"]\" data-proppath=\""+proppath+"\" data-property-idx=\""+i+"\" onkeyup=\"scalarUpdated(this);\" type=\"text\"/></li>")
+    var cc = new_ul.append("<li><input id=\""+proppath+"["+i+"]\" data-proppath=\""+proppath+"\" data-property-idx=\""+i+"\" onkeyup=\"scalarUpdated(this);\" type=\"text\"/>[0]</li>")
 
     var input_control = cc.find('input');
     input_control.get(0).setAttribute("data-metamodel",property_model);
@@ -115,9 +116,11 @@ function scalarUpdated(control) {
   // alert("updateModel "+control.dataset["data-property-path"]);
   var data_property_path = control.getAttribute("data-proppath");
   var metamodel = the_model[data_property_path];
-  var control_index = control.getAttribute('data-property-idx');
+  var control_index = parseInt(control.getAttribute('data-property-idx'));
 
-  console.log(metamodel);
+  console.log("scalarUpdated "+control_index);
+
+  // console.log(metamodel);
 
   // alert("path:"+data_property_path+" metamodel:"+metamodel+" idx:"+control_index+" count:"+metamodel.__metamodel.property_value_containers.length+" value:"+control.value);
 
@@ -136,14 +139,31 @@ function scalarUpdated(control) {
 
   value_info.value = control.value;
 
+  console.log("scalarupdate - control index "+control_index+", len %d",metamodel.__metamodel.num_value_controls);
+
   // Have we typed in to the last control in the list? If so, append a new blank control for the user to use when adding another value.. IF cardinality > 1
-  if ( control_index+1 == metamodel.__metamodel.property_value_containers.length ) {
-    //alert("Add new control....")
-    console.log("Add a new control...");
+  if ( control_index+1 == metamodel.__metamodel.num_value_controls ) {
+    console.log("Add new control....")
+    addScalarControl(metamodel, data_property_path);
+  }
+  else {
+    console.log(""+control_index+"+1 != "+metamodel.__metamodel.num_value_controls+" do not add "+(control_index+1));
   }
 
   var prop_model_info = the_model[data_property_path]
 
   // console.log ( "After update property metamodel %o", metamodel.values);
   // Retrieve the model object from data_property_path - It should contain some metadata and an array of values
+}
+
+function addScalarControl(metamodel, proppath) {
+
+  var i = metamodel.__metamodel.num_value_controls++;
+
+  // For each panel where a control appears for this property...
+  for ( idx in metamodel.__metamodel.property_value_containers ) {
+    // Get hold of the container element for each occurence of this property on a layout
+    var c = metamodel.__metamodel.property_value_containers[idx];
+    c.append("<li><input id=\""+proppath+"["+i+"]\" data-proppath=\""+proppath+"\" data-property-idx=\""+i+"\" onkeyup=\"scalarUpdated(this);\" type=\"text\"/>["+i+"]</li>")
+  }
 }
