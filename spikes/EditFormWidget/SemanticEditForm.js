@@ -49,15 +49,34 @@ function buildFormPanel(layout_definition, parent_element) {
     var propdef = layout_definition.properties[p];
 
     // Make sure we have an object for this property in the model
-    the_model[propdef.property_uri] = {}
+    var property_model = the_model[propdef.property_uri];
+
+    // If this is the first time we have seen this property, create a new empty metamodel (Will contain info about the values and the binding to the controls)
+    if ( property_model == null ) {
+      property_model = {
+        '__metamodel' : {
+          property_value_containers : []
+        },
+        'values' : [
+        ]
+      }
+      the_model[propdef.property_uri] = property_model;
+    }
 
     var new_ul = $(document.createElement('ul'));
     var new_td = $(document.createElement('td'));
 
+    // Add a property to the control so it knows where the binding info in the metamodel is
+    // new_ul.setAttribute('data-metamodel',property_model);
+    // new_ul.get(0).setAttribute('data-metamodel','test');
+
+    // Add this control (parent container) to the list of controls for this property
+    property_model.__metamodel.property_value_containers.push(new_ul);
+
     new_td.append(new_ul);
 
     // Append a row to the table for every property. Each row will support muiltiple values if cardinality says so
-    new_table.append($('<tr>').append($("<td><label for=\""+base_property_path+"["+i+"]\">"+propdef.label+"</label></td>"),new_td));
+    new_table.append($('<tr>').append("<td><label for=\""+base_property_path+"["+i+"]\">"+propdef.label+"</label></td>",new_td));
 
     // Work out the root of the property name (The path to an array of values)
     var base_property_path = parent_context+propdef.property_uri
@@ -67,6 +86,9 @@ function buildFormPanel(layout_definition, parent_element) {
 
     // Finally, output an empty control to act as a "Next" value (If permitted by cardinality rules)
     var cc = new_ul.append("<li><input id=\""+base_property_path+"["+i+"]\" data-property-path=\""+base_property_path+"\" data-property-idx=\""+i+"\" onkeypress=\"controlUpdated(this);\" type=\"text\"/></li>")
+
+    var input_control = cc.find('input');
+    input_control.get(0).setAttribute("data-metamodel",property_model);
 
     // parent_element.append("</ul></td></tr>");
   }
@@ -84,9 +106,9 @@ function controlUpdated(control) {
   // alert("updateModel "+control.dataset["data-property-path"]);
   // Have we typed in to the last control in the list? If so, append a new blank control for the user to use when adding another value.. IF cardinality > 1
   var data_property_path = control.getAttribute("data-property-path");
+  var metamodel = control.getAttribute('data-metamodel');
 
-
-  alert("path:"+data_property_path);
+  alert("path:"+data_property_path+" metamodel:"+metamodel);
   var prop_model_info = the_model[data_property_path]
 
   alert("node: "+prop_model_info);
