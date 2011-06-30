@@ -1,5 +1,9 @@
 
-var the_model = {}
+var the_model = {
+  __metamodel : {
+    propidx : 0
+  }
+}
 
 var general_type_layout = {
   element_id : 'general_info_panel',
@@ -45,11 +49,15 @@ function buildFormPanel(layout_definition, parent_element) {
 
   for ( p in layout_definition.properties ) {
 
-
+    // The definition of this property within the layout for this panel
     var propdef = layout_definition.properties[p];
 
+    // The path to the property -in the model-. Initially, depth of 1, this is the property uri
+    // Later on, ns:prop[4].ns:subprop  (subprop within the 4th instance of prop)
+    var proppath = propdef.property_uri;
+
     // Make sure we have an object for this property in the model
-    var property_model = the_model[propdef.property_uri];
+    var property_model = the_model[proppath];
 
     // If this is the first time we have seen this property, create a new empty metamodel (Will contain info about the values and the binding to the controls)
     if ( property_model == null ) {
@@ -60,7 +68,7 @@ function buildFormPanel(layout_definition, parent_element) {
         'values' : [
         ]
       }
-      the_model[propdef.property_uri] = property_model;
+      the_model[proppath] = property_model;
     }
 
     var new_ul = $(document.createElement('ul'));
@@ -85,7 +93,8 @@ function buildFormPanel(layout_definition, parent_element) {
     // For(blah...)
 
     // Finally, output an empty control to act as a "Next" value (If permitted by cardinality rules)
-    var cc = new_ul.append("<li><input id=\""+base_property_path+"["+i+"]\" data-property-path=\""+base_property_path+"\" data-property-idx=\""+i+"\" onkeypress=\"controlUpdated(this);\" type=\"text\"/></li>")
+    // keydown to capture deletes etc keypress for only sensible keys
+    var cc = new_ul.append("<li><input id=\""+proppath+"["+i+"]\" data-proppath=\""+proppath+"\" data-property-idx=\""+i+"\" onkeyup=\"scalarUpdated(this);\" type=\"text\"/></li>")
 
     var input_control = cc.find('input');
     input_control.get(0).setAttribute("data-metamodel",property_model);
@@ -102,16 +111,39 @@ function buildFormPanel(layout_definition, parent_element) {
 
 }
 
-function controlUpdated(control) {
+function scalarUpdated(control) {
   // alert("updateModel "+control.dataset["data-property-path"]);
-  // Have we typed in to the last control in the list? If so, append a new blank control for the user to use when adding another value.. IF cardinality > 1
-  var data_property_path = control.getAttribute("data-property-path");
-  var metamodel = control.getAttribute('data-metamodel');
+  var data_property_path = control.getAttribute("data-proppath");
+  var metamodel = the_model[data_property_path];
+  var control_index = control.getAttribute('data-property-idx');
 
-  alert("path:"+data_property_path+" metamodel:"+metamodel);
+  console.log(metamodel);
+
+  // alert("path:"+data_property_path+" metamodel:"+metamodel+" idx:"+control_index+" count:"+metamodel.__metamodel.property_value_containers.length+" value:"+control.value);
+
+  if ( control_index >= metamodel.values.length ) {
+    // We are setting a value on a property which has not been set before. Need to create a new entry in the values array
+    var new_value_info = {
+      value:"",
+      __metamodel:{
+        status:"new"
+      }
+    };
+    metamodel.values.push(new_value_info);
+  }
+
+  var value_info = metamodel.values[control_index];
+
+  value_info.value = control.value;
+
+  // Have we typed in to the last control in the list? If so, append a new blank control for the user to use when adding another value.. IF cardinality > 1
+  if ( control_index+1 == metamodel.__metamodel.property_value_containers.length ) {
+    //alert("Add new control....")
+    console.log("Add a new control...");
+  }
+
   var prop_model_info = the_model[data_property_path]
 
-  alert("node: "+prop_model_info);
-
+  // console.log ( "After update property metamodel %o", metamodel.values);
   // Retrieve the model object from data_property_path - It should contain some metadata and an array of values
 }
