@@ -4,6 +4,8 @@ class DomainModelInfoService {
 
     static transactional = true
 
+    def grailsApplication 
+
     def sync() {
       // Neat code from http://stackoverflow.com/questions/2707796/list-of-all-domain-classes-in-grails to list all domain classes
       println "DomainModelInfoService::syn()"
