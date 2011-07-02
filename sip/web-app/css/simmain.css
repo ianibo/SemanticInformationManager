@@ -1,0 +1,55 @@
+html * {
+    margin: 0;
+    /*padding: 0; SELECT NOT DISPLAYED CORRECTLY IN FIREFOX */
+}
+
+/* GENERAL */
+
+.spinner {
+    padding: 5px;
+    position: absolute;
+    right: 0;
+}
+
+body {
+    background: #fff;
+    color: #333;
+    font: 11px verdana, arial, helvetica, sans-serif;
+
+    /* margin: auto;
+    width: 960px; */
+    margin-left: 20px;
+    margin-right: 20px;
+    width: auto;
+}
+
+#simmain {
+  width: 100%;
+  margin: 5px;
+  /* border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #f3f3f3; */
+}
+
+#simnav {
+    margin-left:-125px; /* "left col" width */
+    margin-top:5px;
+    margin-bottom:5px;
+    width:100px;
+
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    /*margin-left: 20px auto 10px;
+    margin-top: 20px auto 10px;
+    margin-bottom: 20px auto 10px;*/
+    background: #f3f3f3;
+    padding: 10px;
+}
+
+#simmainlayout {
+    padding-left:125px; /* "left col" width */ 
+    /* padding-right:150px; */ /* "right col" width */
+}
+
