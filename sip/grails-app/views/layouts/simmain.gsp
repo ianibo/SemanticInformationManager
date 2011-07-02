@@ -9,7 +9,7 @@
     </head>
       <body class="yui3-skin-sam  yui-skin-sam">
         <div id="simheader" class="yui3-g">
-          <div class="yui3-u" style="width:100%">
+          <div class="yui3-u graypanel" style="width:100%">
             <div style="float:right;">Welcome back ${user.username}</div>
             <div>Semantic Information Manager</div>
           </div>
@@ -17,7 +17,7 @@
 
         <div class="yui3-g" id="simmainlayout">
 
-          <div id="simnav" class="yui3-u">
+          <div id="simnav" class="yui3-u graypanel">
 <ul>
   <li><g:link controller="home" action="create">New Record</g:link></li>
   <li><g:link controller="newSPARQLSearch" action="index">New Search</g:link></li>

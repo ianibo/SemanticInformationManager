@@ -18,9 +18,14 @@ body {
 
     /* margin: auto;
     width: 960px; */
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
     width: auto;
+}
+
+#simheader {
+    margin-top:10px;
+    margin-right:20px;
 }
 
 #simmain {
@@ -37,7 +42,9 @@ body {
     margin-top:5px;
     margin-bottom:5px;
     width:150px;
+}
 
+div.graypanel {
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -48,8 +55,10 @@ body {
     padding: 10px;
 }
 
+
 #simmainlayout {
     padding-left:175px; /* "left col" width */ 
     /* padding-right:150px; */ /* "right col" width */
 }
+
 
