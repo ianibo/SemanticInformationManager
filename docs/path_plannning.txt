@@ -1,0 +1,32 @@
+
+
+
+
+Edit a resource
+.../resource/---URIPart---
+
+
+	For db objects URIPart is db/instanceid/tableid/pk1/pk2/pk3
+        For semantic web objects, URI Part is a guid to a local co-reference service translating into a full URI
+
+
+
+.../Look at private templates & saves searches
+.../users/{user}/searchtemplates/{templateid}
+
+
+Search for instances of a particular type, create a new resource of a particular type
+.../types/---URIPart---/[search/[$templateid]|new]
+
+
+
+
+
+
+Pluggable architectureA
+
+
+	App is a plugin itself
+	Define datamodels as plugins
+
+	Assemlbly app pulls together edit framework and datamodel in a prod'n app.
