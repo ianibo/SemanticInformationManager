@@ -1,0 +1,42 @@
+
+
+To use this plugin in dev mode, 
+
+Add the following to your grails-app/conf/BuildConfig.groovy
+
+// Local plugins to include
+// Include any local domain model plugins first
+// grails.plugin.location.'iep-datamodel'='../iep-datamodel-plugin/iep-datamodel'
+
+grails.plugin.location.'SIPlugin'='../../SemanticInformationManager/SIPPlugin'
+
+
+-- A SIP project needs authenticated users. we normally use the nimble plugin for this:
+grails install-plugin nimble 0.4-SNAPSHOT
+grails jack-be-nimble <package> <User Class Name> <Profile Class Name>
+
+so for us, thats mostlt
+
+grails jack-be-nimble com.k_int.sim User Profile
+
+You should also secure any URLs using SIM, initially, the dashboard URL is protected with 
+
+        secure(controller: "home") {
+            before = {
+                accessControl {
+                    true
+                }
+            }
+        }
+
+in you grails-app/conf/NimbleSecurityFilters.groovy
+
+Finally for nimble, don't forget to add
+
+plugins.mail=0.9
+
+to application.properties
+
+-- SIP has some defaut URL Mappings to get an app running as quickly as possible from only a domain model
+To use them you may need to commment out all the default UrlMappings in your assembly project.
+Specifically, SIP has a default mapping of / to it's dashboard controller.
