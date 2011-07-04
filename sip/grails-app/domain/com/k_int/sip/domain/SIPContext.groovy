@@ -12,7 +12,7 @@ class SIPContext {
     String contextName
     String contextType
 
-    static belongsTo [owner:SIPRepository]
+    static belongsTo = [owner:SIPRepository]
 
     static constraints = {
     }
