@@ -24,6 +24,8 @@ class DomainModelInfoService {
 
       println "Looking up admin user..."
       def admin_user = grails.plugins.nimble.core.UserBase.findByUsername('admin')
+      def admin_role = grails.plugins.nimble.core.Role.findByName('Administrator')
+
       println "admin user: ${admin_user}"
 
       println "Syncing context models with local GORM domain classes...."
@@ -42,6 +44,11 @@ class DomainModelInfoService {
                                contextUri:ctxname,
                                contextName:ctxname,
                                contextType:'GORM').save();
+          // Grant visibility of this role to the admin user, just to be on the safe side
+          // admin_role.
+          // grails.plugins.nimble.core.Permission p = new grails.plugins.nimble.core.Permission(target:'uri');
+          // p.managed = true (== with grant option?)
+          // permissionsService.createPermission(p,role)
           // Set up default search and layout
         }
       }
