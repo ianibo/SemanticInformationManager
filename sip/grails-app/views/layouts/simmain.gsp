@@ -18,15 +18,18 @@
         <div class="yui3-g" id="simmainlayout">
 
           <div id="simnav" class="yui3-u graypanel">
-<ul>
+
+  <g:each in="${workspace.availableRepositories}" var="repo">
+    <h3>${repo.name}</h3>
+    <ul class="plainlist">
+      <g:each in="${repo.contexts}" var="c">
+        <li>${c.name}</li>
+      </g:each>
+    </ul>
+  </g:each>
+
   <li><g:link controller="home" action="create">New Record</g:link></li>
   <li><g:link controller="newSPARQLSearch" action="index">New Search</g:link></li>
-  <li>Search Templates
-    <ul>
-      <li>One</li>
-      <li>Two</li>
-    </ul>
-  </ul>
 </ul>
           </div>
 

@@ -61,4 +61,12 @@ div.graypanel {
     /* padding-right:150px; */ /* "right col" width */
 }
 
+ul.plainlist {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+    padding-left:10px;
+		border: none;
+}
+
 

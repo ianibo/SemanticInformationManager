@@ -30,7 +30,7 @@ class DomainModelInfoService {
 
       println "Syncing context models with local GORM domain classes...."
 
-      def gorm_local_repo = GormSIPRepository.findByUri('uri:gorm:localrepo') ?: new GormSIPRepository(uri:'uri:gorm:localrepo').save()
+      def gorm_local_repo = GormSIPRepository.findByUri('uri:gorm:localrepo') ?: new GormSIPRepository(uri:'uri:gorm:localrepo', name:'Local Database').save()
 
       // Neat code from http://stackoverflow.com/questions/2707796/list-of-all-domain-classes-in-grails to list all domain classes
       println "DomainModelInfoService::syn()"
@@ -42,8 +42,8 @@ class DomainModelInfoService {
           println "Create new sip context for ${ctxname}"
           ctx = new SIPContext(owner:gorm_local_repo,
                                contextUri:ctxname,
-                               contextName:ctxname,
-                               contextType:'GORM').save();
+                               contextName:domainclass.shortName,
+                               contextType:'GORM').save(flush:true);
           // Grant visibility of this role to the admin user, just to be on the safe side
           // admin_role.
           // grails.plugins.nimble.core.Permission p = new grails.plugins.nimble.core.Permission(target:'uri');
