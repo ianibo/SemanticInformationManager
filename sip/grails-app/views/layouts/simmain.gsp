@@ -21,14 +21,20 @@
 
   <g:each in="${workspace.availableRepositories}" var="repo">
     <h3>${repo.name}</h3>
-    <ul class="plainlist">
-      <g:each in="${repo.contexts}" var="c">
-        <li>${c.name}</li>
-      </g:each>
-    </ul>
+    <g:each in="${repo.contexts}" var="c">
+      <h4>${c.name}</h4>
+      <ul class="plainlist">
+        <g:each in="${c.searchtemplates}" var="sst">
+          <li><a href="${sst.id}">${sst.name}</a></li>
+        </g:each>
+        <g:each in="${c.edittemplates}" var="set">
+          <li><g:link action="edit" controller="resource">New Record(${set.name})</g:link></li>
+        </g:each>
+      </ul>
+    </g:each>
   </g:each>
 
-  <li><g:link controller="home" action="create">New Record</g:link></li>
+  <li></li>
   <li><g:link controller="newSPARQLSearch" action="index">New Search</g:link></li>
 </ul>
           </div>

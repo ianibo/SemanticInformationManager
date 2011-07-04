@@ -44,6 +44,23 @@ class DomainModelInfoService {
                                contextUri:ctxname,
                                contextName:domainclass.shortName,
                                contextType:'GORM').save(flush:true);
+
+          println "Create new default dynamic search context uri:gorm:${domainclass.fullName}/defaultsearch"
+          DynamicSIPSearchTemplate dst = new DynamicSIPSearchTemplate(name:'Default Search',
+                                                                      uri:"uri:gorm:${domainclass.fullName}/defaultsearch",
+                                                                      owner:ctx).save(flush:true);
+          if (dst.hasErrors()) {
+            dst.errors.each {
+              println(it)
+            }
+          }
+
+
+          println "Create new default dynamic edit context uri:gorm:${domainclass.fullName}/defaultedit"
+          DynamicSIPEditTemplate det = new DynamicSIPEditTemplate(name:'Default Editor',
+                                                                  uri:"uri:gorm:${domainclass.fullName}/defaultedit",
+                                                                  owner:ctx).save(flush:true);
+
           // Grant visibility of this role to the admin user, just to be on the safe side
           // admin_role.
           // grails.plugins.nimble.core.Permission p = new grails.plugins.nimble.core.Permission(target:'uri');
