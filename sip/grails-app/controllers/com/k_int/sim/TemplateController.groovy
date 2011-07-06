@@ -8,6 +8,14 @@ class TemplateController {
 
       println "template::index"
 
+      if ( authenticatedUser != null ) {
+        println "Request made by authenticated user: ${authenticatedUser}"
+      }
+      else {
+        println "Anonymous request"
+      }
+
+
       def response = [
         'one':'two'
       ]

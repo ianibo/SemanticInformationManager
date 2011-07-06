@@ -215,7 +215,7 @@ function loadTemplateFrom(template_uri) {
   console.log("Loading template "+template_uri);
   $.getJSON(template_uri, 
             function(data) {
-              console.log("got template: %o",template_uri);
+              console.log("got template: %o",data);
             });
 
 }
