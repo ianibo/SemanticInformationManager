@@ -28,7 +28,7 @@
           <li><a href="${sst.id}">${sst.name}</a></li>
         </g:each>
         <g:each in="${c.edittemplates}" var="set">
-          <li><g:link action="edit" controller="resource">New Record(${set.name})</g:link></li>
+          <li><g:link action="create" controller="resource" params="${['repo':repo.id,'template':set.id]}">New Record(${set.name})</g:link></li>
         </g:each>
       </ul>
     </g:each>

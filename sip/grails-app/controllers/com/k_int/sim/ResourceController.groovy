@@ -12,4 +12,12 @@ class ResourceController {
     result
   }
 
+  def create = { 
+    def result = [:]
+    result.user = authenticatedUser
+    result.workspace = workspaceService.listAccessibleComponents(authenticatedUser);
+
+    render(view:'edit',model:result)
+  }
+
 }

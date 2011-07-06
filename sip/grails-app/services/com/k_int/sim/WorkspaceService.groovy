@@ -21,7 +21,7 @@ class WorkspaceService {
       SIPRepository.findAll().each { repo ->
         println "Adding repo: ${repo.uri}"
 
-        def repo_info = [name:repo.name, contexts:[]]
+        def repo_info = [id:repo.id, name:repo.name, contexts:[]]
         
     
         // For each repository, list all the contexts available to the identified user in that repository
@@ -34,14 +34,14 @@ class WorkspaceService {
           // Add all the search templates this user can see for this context
           SIPSearchTemplate.findAllByOwner(c).each { sst ->
             println "${sst}"
-            ctx_info.searchtemplates.add([name:sst.name,uri:sst.uri,type:sst.class.name,id:sst.id])
+            ctx_info.searchtemplates.add([id:sst.id,name:sst.name,uri:sst.uri,type:sst.class.name,id:sst.id])
           }
 
           println "Adding edit templates ${SIPEditTemplate.list().size()}"
           // Add each record edit template this user can see for this context
           SIPEditTemplate.findAllByOwner(c).each { set ->
             println "${set}"
-            ctx_info.edittemplates.add([name:set.name,uri:set.uri,type:set.class.name,id:set.id])
+            ctx_info.edittemplates.add([id:set.id,name:set.name,uri:set.uri,type:set.class.name,id:set.id])
           }
         }
 
