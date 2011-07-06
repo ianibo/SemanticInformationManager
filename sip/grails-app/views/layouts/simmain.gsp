@@ -7,17 +7,18 @@
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssgrids/grids-min.css">
         <g:layoutHead />
     </head>
-      <body class="yui3-skin-sam  yui-skin-sam">
-        <div id="simheader" class="yui3-g">
-          <div class="yui3-u graypanel" style="width:100%">
-            <div style="float:right;">Welcome back ${user.username}</div>
-            <div>Semantic Information Manager</div>
-          </div>
+
+    <body class="yui3-skin-sam  yui-skin-sam">
+      <div id="simheader" class="yui3-g">
+        <div class="yui3-u graypanel" style="width:100%">
+          <div style="float:right;">Welcome back ${user.username}</div>
+          <div>Semantic Information Manager</div>
         </div>
+      </div>
 
-        <div class="yui3-g" id="simmainlayout">
+      <div class="yui3-g" id="simmainlayout">
 
-          <div id="simnav" class="yui3-u graypanel">
+        <div id="simnav" class="yui3-u graypanel">
 
   <g:each in="${workspace.availableRepositories}" var="repo">
     <h3>${repo.name}</h3>
@@ -34,17 +35,14 @@
     </g:each>
   </g:each>
 
-  <li></li>
-  <li><g:link controller="newSPARQLSearch" action="index">New Search</g:link></li>
-</ul>
-          </div>
-
-          <div id="simmain" class="yui3-u">
-            <g:layoutBody />
-          </div>
         </div>
 
-        <div id="simfooter" class="yui3-g">
+        <div id="simmain" class="yui3-u">
+          <g:layoutBody />
         </div>
+      </div>
+
+      <div id="simfooter" class="yui3-g">
+      </div>
     </body>
 </html>
