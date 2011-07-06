@@ -15,12 +15,13 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script> 
   </head>
   <body>
+    The URI for the template download is ${createLink(controller:'template',action:'index',id:params.template)}
     <div id="SIMEditForm">
       <ul>
       </ul>
     </div>
     <script language="JavaScript">
-      makeSIMEditor("#SIMEditForm");
+      makeSIMEditor("#SIMEditForm","${createLink(controller:'template',id:params.template)}");
     </script>
   </body>
 </html>

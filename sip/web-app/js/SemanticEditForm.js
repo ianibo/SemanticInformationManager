@@ -44,7 +44,10 @@ function newBlankNode() {
 
 // Turn the div identified by editor_id into a semantic editing form
 // This function is to be used for the creation of new descriptions rather than editing existing ones
-function makeSIMEditor(editor_id) {
+function makeSIMEditor(editor_id, base_template_uri) {
+
+  var template = loadTemplateFrom(base_template_uri);
+
   // Get hold of the element
   root_element = $( editor_id )
 
@@ -206,4 +209,13 @@ function addScalarControl(resource_uri, metamodel, property) {
     var c = metamodel.__metamodel.property_value_containers[idx];
     c.append("<li><input id=\""+property+"["+i+"]\"  data-resource-uri=\""+resource_uri+"\" data-property=\""+property+"\" data-property-idx=\""+i+"\" onkeyup=\"scalarUpdated(this);\" type=\"text\"/>["+i+"]</li>")
   }
+}
+
+function loadTemplateFrom(template_uri) {
+  console.log("Loading template "+template_uri);
+  $.getJSON(template_uri, 
+            function(data) {
+              console.log("got template: %o",template_uri);
+            });
+
 }
