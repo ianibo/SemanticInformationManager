@@ -37,7 +37,6 @@ class WorkspaceService {
             ctx_info.searchtemplates.add([id:sst.id,name:sst.name,uri:sst.uri,type:sst.class.name,id:sst.id])
           }
 
-          println "Adding edit templates ${SIPEditTemplate.list().size()}"
           // Add each record edit template this user can see for this context
           SIPEditTemplate.findAllByOwner(c).each { set ->
             println "${set}"

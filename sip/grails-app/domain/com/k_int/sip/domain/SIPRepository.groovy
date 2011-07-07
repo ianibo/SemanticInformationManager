@@ -7,4 +7,8 @@ class SIPRepository {
 
     static constraints = {
     }
+
+    String generateDynamicTemplate(SIPContext ctx) {
+      println "SIPRepository::generateDynamicTemplate"
+    }
 }

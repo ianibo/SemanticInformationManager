@@ -10,4 +10,9 @@ class SIPEditTemplate {
 
     static constraints = {
     }
+
+ 
+    //static transients = [ 'json' ] 
+    //public abstract String getJson();
+
 }

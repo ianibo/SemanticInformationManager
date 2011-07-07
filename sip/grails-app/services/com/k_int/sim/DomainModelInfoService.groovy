@@ -41,9 +41,9 @@ class DomainModelInfoService {
         if ( ctx == null ) {
           println "Create new sip context for ${ctxname}"
           ctx = new SIPContext(owner:gorm_local_repo,
-                               contextUri:ctxname,
-                               contextName:domainclass.shortName,
-                               contextType:'GORM').save(flush:true);
+                                   contextUri:ctxname,
+                                   contextName:domainclass.shortName,
+                                   contextType:'GORM').save(flush:true);
 
           println "Create new default dynamic search context uri:gorm:${domainclass.fullName}/defaultsearch"
           DynamicSIPSearchTemplate dst = new DynamicSIPSearchTemplate(name:'Default Search',
