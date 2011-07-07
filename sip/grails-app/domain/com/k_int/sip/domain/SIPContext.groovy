@@ -11,6 +11,7 @@ class SIPContext {
     String contextUri
     String contextName
     String contextType
+    String defaultType
 
     static belongsTo = [owner:SIPRepository]
 

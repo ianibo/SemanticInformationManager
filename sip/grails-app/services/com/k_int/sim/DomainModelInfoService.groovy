@@ -43,6 +43,7 @@ class DomainModelInfoService {
           ctx = new SIPContext(owner:gorm_local_repo,
                                    contextUri:ctxname,
                                    contextName:domainclass.shortName,
+                                   defaultType:domainclass.fullName,
                                    contextType:'GORM').save(flush:true);
 
           println "Create new default dynamic search context uri:gorm:${domainclass.fullName}/defaultsearch"
