@@ -23,5 +23,6 @@
     <script language="JavaScript">
       makeSIMEditor("#SIMEditForm","${createLink(controller:'template',id:params.template)}");
     </script>
+    <input type="button" name="Submit" onClick="javascript:sendFormData('${createLink(controller:'resource',action:'update')}')">
   </body>
 </html>

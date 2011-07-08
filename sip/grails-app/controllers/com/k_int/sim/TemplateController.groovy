@@ -8,7 +8,7 @@ class TemplateController {
     def index = { 
 
       println "template::index - Get template ${params.template} params=${params}"
-      def template_json = '{"result":"-1","message":"Unknown template"}'
+      def template_json = ''
 
       if ( authenticatedUser != null ) {
         println "Request made by authenticated user: ${authenticatedUser}"
@@ -28,6 +28,7 @@ class TemplateController {
         println "Unable to locate template ${params.id}"
       }
 
+      // println "template: ${template_json}"
       // render response as JSON;
       render(text:template_json, contentType:'application/json')
     }

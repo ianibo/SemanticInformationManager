@@ -173,7 +173,7 @@ function scalarUpdated(control) {
 
   // alert("path:"+data_property_path+" metamodel:"+metamodel+" idx:"+control_index+" count:"+metamodel.__metamodel.property_value_containers.length+" value:"+control.value);
 
-  if ( control_index >= metamodel.values.length ) {
+  if ( ( control_index >= metamodel.values.length ) && ( control.value.length > 0 ) ) {
     // We are setting a value on a property which has not been set before. Need to create a new entry in the values array
     var new_value_info = {
       value:"",
@@ -224,4 +224,43 @@ function loadTemplateFrom(template_uri) {
     }
   });
   return template;
+}
+
+function sendFormData(url) {
+
+  // Send the model to the resource update service.
+
+  var clean_model = {}
+  // We need to walk the list of objects in the model, and create a clean update to send to the server.
+  // The model as it exists in here is full of functions and circular references. 
+
+  console.log("create clean model");
+  for ( resource_uri in the_model.__graphmap ) {
+    console.log("resource: "+resource_uri);
+
+    var resource_data = the_model.__graphmap[resource_uri]
+
+    var clean_resource = {}
+
+    for ( property_uri in resource_data ) {
+      var property_info = resource_data[property_uri];
+      clean_resource[property_uri] = {};
+      clean_resource[property_uri].values = property_info.values;
+    }
+
+    clean_model[resource_uri] = clean_resource;
+  }
+
+  $.ajax({
+    type: 'POST',
+    async: false,
+    url: url,
+    data: {model: JSON.stringify(clean_model)},
+    success: function(result) {
+    },
+    error: function(result) {
+      alert("error");
+    }
+  });
+
 }
