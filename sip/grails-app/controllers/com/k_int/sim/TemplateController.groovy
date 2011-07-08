@@ -28,10 +28,6 @@ class TemplateController {
         println "Unable to locate template ${params.id}"
       }
 
-      def response = [
-        'one':'two'
-      ]
-
       // render response as JSON;
       render(text:template_json, contentType:'application/json')
     }

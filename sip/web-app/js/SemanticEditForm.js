@@ -28,14 +28,14 @@ var the_model = {
   __graphmap : {}
 }
 
-var general_type_layout = {
-  element_id : 'general_info_panel',
-  tab_name : 'General',
-  properties : [
-    { label : 'Title', property_uri : 'dc.title', cardinality:'m' },
-    { label : 'Description', property_uri : 'dc.description' , cardinality:'1'}
-  ]
-}
+//var general_type_layout = {
+//  element_id : 'general_info_panel',
+//  tab_name : 'General',
+//  properties : [
+//    { label : 'Title', property_uri : 'dc.title', cardinality:'m' },
+//    { label : 'Description', property_uri : 'dc.description' , cardinality:'1'}
+//  ]
+//}
 
 
 function newBlankNode() {
@@ -58,12 +58,14 @@ function makeSIMEditor(editor_id, base_template_uri) {
   the_model.__root_graph_uri = newBlankNode();
   the_model.__graphmap[the_model.__root_graph_uri] = {};
 
-  var general_info_panel = buildFormPanel(general_type_layout, root_element, the_model.__root_graph_uri)
+  // var general_info_panel = buildFormPanel(general_type_layout, root_element, the_model.__root_graph_uri)
+  var general_info_panel = buildFormPanel(template, root_element, the_model.__root_graph_uri)
 
   // Add the generic details tab
   // Working from http://jqueryui.com/demos/tabs/#...immediately_select_a_just_added_tab
   // and http://blog.favrik.com/2009/08/11/dynamically-adding-jquery-tabs-round2/
-  tab_control.tabs('add','#'+general_type_layout.element_id,general_type_layout.tab_name);
+  // tab_control.tabs('add','#'+general_type_layout.element_id,general_type_layout.tab_name);
+  tab_control.tabs('add','#'+template.element_id,template.tab_name);
 
   //tab_control.tabs('add','#default',"Default Properties");
   //tab_control.tabs('add','#t1',"Default Properties1");
@@ -213,9 +215,13 @@ function addScalarControl(resource_uri, metamodel, property) {
 
 function loadTemplateFrom(template_uri) {
   console.log("Loading template "+template_uri);
-  $.getJSON(template_uri, 
-            function(data) {
-              console.log("got template: %o",data);
-            });
-
+  var template
+  $.ajax({
+    async:false,
+    url: template_uri,
+    success: function(data){
+      template=data;
+    }
+  });
+  return template;
 }
