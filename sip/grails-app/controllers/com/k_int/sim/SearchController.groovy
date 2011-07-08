@@ -2,5 +2,12 @@ package com.k_int.sim
 
 class SearchController {
 
-    def index = { }
+  def workspaceService
+
+  def index = { 
+    def result = [:]
+    result.user = authenticatedUser
+    result.workspace = workspaceService.listAccessibleComponents(authenticatedUser);
+    result
+  }
 }
