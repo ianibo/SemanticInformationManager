@@ -11,4 +11,8 @@ class SIPRepository {
     String generateDynamicTemplate(SIPContext ctx) {
       println "SIPRepository::generateDynamicTemplate"
     }
+
+    def processUpdate(model) {
+      println "SIPRepository::processUpdate"
+    }
 }

@@ -18,6 +18,7 @@ class TemplateController {
       }
 
       SIPEditTemplate sit = SIPEditTemplate.get(params.id)
+
       if ( sit != null ) {
         println "Locate template ${params.id}"
         // Call the abstract getJSON method on the template. For dynamic edit templates, the json will be

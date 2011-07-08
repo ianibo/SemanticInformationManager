@@ -18,6 +18,9 @@ var the_model = {
   // Information about the model
   __metamodel : {},
 
+  // Target repository
+  __target_repository_id : 0,
+
   // A counter for producing blank nodes
   __blank_node_counter : 0,
 
@@ -44,7 +47,7 @@ function newBlankNode() {
 
 // Turn the div identified by editor_id into a semantic editing form
 // This function is to be used for the creation of new descriptions rather than editing existing ones
-function makeSIMEditor(editor_id, base_template_uri) {
+function makeSIMEditor(editor_id, base_template_uri, target_repository_id, root_types) {
 
   var template = loadTemplateFrom(base_template_uri);
 
@@ -57,8 +60,10 @@ function makeSIMEditor(editor_id, base_template_uri) {
   // For now, we are going to assume we are creating a new record
   the_model.__root_graph_uri = newBlankNode();
   the_model.__graphmap[the_model.__root_graph_uri] = {};
+  the_model.__graphmap[the_model.__root_graph_uri].__metamodel = {status:"new", types:root_types};
 
-  // var general_info_panel = buildFormPanel(general_type_layout, root_element, the_model.__root_graph_uri)
+  the_model.__target_repository_id = target_repository_id;
+
   var general_info_panel = buildFormPanel(template, root_element, the_model.__root_graph_uri)
 
   // Add the generic details tab
@@ -130,7 +135,11 @@ function buildFormPanel(layout_definition, parent_element, root_object_uri) {
     new_td.append(new_ul);
 
     // Append a row to the table for every property. Each row will support muiltiple values if cardinality says so
-    new_table.append($('<tr>').append("<td style=\"vertical-align: top\"><label for=\""+base_property_path+"["+i+"]\">"+propdef.label+"</label></td>",new_td));
+    var mandatory_flag = "";
+    if ( propdef.mandatory == true )
+      mandatory_flag="*";
+
+    new_table.append($('<tr>').append("<td style=\"vertical-align: top\"><label for=\""+base_property_path+"["+i+"]\">"+propdef.label+mandatory_flag+"</label></td>",new_td));
 
     // Work out the root of the property name (The path to an array of values)
     var base_property_path = parent_context+propdef.property_uri
@@ -230,11 +239,16 @@ function sendFormData(url) {
 
   // Send the model to the resource update service.
 
-  var clean_model = {}
+  var clean_model = {
+    target_repository_id : the_model.__target_repository_id,
+    graph : {}
+  };
+
   // We need to walk the list of objects in the model, and create a clean update to send to the server.
   // The model as it exists in here is full of functions and circular references. 
 
-  console.log("create clean model");
+  console.log("create clean model %o", the_model.__graphmap);
+
   for ( resource_uri in the_model.__graphmap ) {
     console.log("resource: "+resource_uri);
 
@@ -244,11 +258,16 @@ function sendFormData(url) {
 
     for ( property_uri in resource_data ) {
       var property_info = resource_data[property_uri];
-      clean_resource[property_uri] = {};
-      clean_resource[property_uri].values = property_info.values;
+      if ( property_uri == '__metamodel' ) {
+        clean_resource['__metamodel'] = property_info;
+      }
+      else {
+        clean_resource[property_uri] = {};
+        clean_resource[property_uri].values = property_info.values;
+      }
     }
 
-    clean_model[resource_uri] = clean_resource;
+    clean_model.graph[resource_uri] = clean_resource;
   }
 
   $.ajax({
