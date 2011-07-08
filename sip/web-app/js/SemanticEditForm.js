@@ -28,7 +28,9 @@ var the_model = {
   __root_graph_uri : "",
 
   // Contains all the graphs related to this model
-  __graphmap : {}
+  __graphmap : {},
+
+  __template : {}
 }
 
 //var general_type_layout = {
@@ -50,6 +52,7 @@ function newBlankNode() {
 function makeSIMEditor(editor_id, base_template_uri, target_repository_id, root_types) {
 
   var template = loadTemplateFrom(base_template_uri);
+  the_model.__template = template;
 
   // Get hold of the element
   root_element = $( editor_id )
@@ -149,10 +152,10 @@ function buildFormPanel(layout_definition, parent_element, root_object_uri) {
 
     // Finally, output an empty control to act as a "Next" value (If permitted by cardinality rules)
     // keydown to capture deletes etc keypress for only sensible keys
-    var cc = new_ul.append("<li><input id=\""+property+"["+i+"]\" data-resource-uri=\""+root_object_uri+"\" data-property=\""+property+"\" data-property-idx=\""+i+"\" onkeyup=\"scalarUpdated(this);\" type=\"text\"/>[0]</li>")
+    var cc = new_ul.append("<li><input id=\""+property+"["+i+"]\" data-resource-uri=\""+root_object_uri+"\" data-property=\""+property+"\" data-property-idx=\""+i+"\" data-propdef-idx=\""+p+"\" onkeyup=\"scalarUpdated(this,"+p+","+propdef.mandatory+","+propdef.cardinality+");\" type=\"text\"/>[0]</li>")
 
-    var input_control = cc.find('input');
-    input_control.get(0).setAttribute("data-metamodel",property_model);
+    //var input_control = cc.find('input');
+    //input_control.get(0).setAttribute("data-metamodel",property_model);
 
     // parent_element.append("</ul></td></tr>");
   }
@@ -166,7 +169,7 @@ function buildFormPanel(layout_definition, parent_element, root_object_uri) {
 
 }
 
-function scalarUpdated(control) {
+function scalarUpdated(control,defidx,mandatory,cardinality) {
 
   // alert("updateModel "+control.dataset["data-property-path"]);
   var resource_uri = control.getAttribute("data-resource-uri");
@@ -200,7 +203,8 @@ function scalarUpdated(control) {
   console.log("scalarupdate - control index "+control_index+", len %d",metamodel.__metamodel.num_value_controls);
 
   // Have we typed in to the last control in the list? If so, append a new blank control for the user to use when adding another value.. IF cardinality > 1
-  if ( control_index+1 == metamodel.__metamodel.num_value_controls ) {
+  if ( ( control_index+1 == metamodel.__metamodel.num_value_controls ) &&
+       ( metamodel.values.length < cardinality ) ) {
     console.log("Add new control....")
     addScalarControl(resource_uri, metamodel, data_property_path);
   }
