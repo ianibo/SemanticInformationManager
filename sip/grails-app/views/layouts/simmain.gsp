@@ -26,7 +26,7 @@
       <h4>${c.name}</h4>
       <ul class="plainlist">
         <g:each in="${c.searchtemplates}" var="sst">
-          <li><g:link controller="search" params="${['repo':repo.id,'template':sst.id]}">${sst.name}</g:link></li>
+          <li><g:link controller="search" action="showtemplate" params="${['repo':repo.id,'template':sst.id]}">${sst.name}</g:link></li>
         </g:each>
         <g:each in="${c.edittemplates}" var="set">
           <li><g:link action="create" controller="resource" params="${['repo':repo.id,'template':set.id]}">New Record(${set.name})</g:link></li>

@@ -9,8 +9,8 @@ class GormSIPRepository extends SIPRepository {
     static constraints = {
     }
 
-    // Generate a dynamic template for the identified context.
-    String generateDynamicTemplate(SIPContext ctx) {
+    // Generate a dynamic template edit for the identified context.
+    String generateDynamicEditTemplate(SIPContext ctx) {
 
       def new_layout = [:]
       new_layout.element_id='tab1'
@@ -35,6 +35,34 @@ class GormSIPRepository extends SIPRepository {
       }
 
       def converter = new_layout as JSON;
+      def json_string = converter.toString()
+
+      return json_string
+    }
+
+    // Generate a dynamic search template for the identified context
+    String generateDynamicSearchModel(SIPContext ctx) {
+      def new_template = [:]
+      new_layout.element_id='tab1'
+      new_layout.access_points = []
+      new_layout.search_columns = []
+
+      def target_class_info = grailsApplication.getArtefact("Domain",ctx.defaultType);
+      if ( target_class_info != null ) {
+
+        target_class_info.getPersistentProperties().each { pprop ->
+          // println "${pprop}..."
+          if ( pprop.association ) {
+            // So far, only handle scalar types
+          }
+          else {
+            new_layout.access_points.add(pprop.name);
+            new_layout.search_columns.add(pprop.name);
+          }
+        }
+      }
+
+      def converter = new_template as JSON;
       def json_string = converter.toString()
 
       return json_string

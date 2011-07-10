@@ -22,7 +22,7 @@
     </div>
     <script language="JavaScript">
       makeSIMEditor("#SIMEditForm",
-                    "${createLink(controller:'template',id:params.template)}",
+                    "${createLink(controller:'template',action:'resourcetemplate',id:params.template)}",
                     "${params.repo}",
                     ["${default_type}"]);
     </script>

@@ -5,7 +5,7 @@ import com.k_int.sip.domain.*
 
 class TemplateController {
 
-    def index = { 
+    def resourcetemplate = { 
 
       println "template::index - Get template ${params.template} params=${params}"
       def template_json = ''
@@ -32,5 +32,8 @@ class TemplateController {
       // println "template: ${template_json}"
       // render response as JSON;
       render(text:template_json, contentType:'application/json')
+    }
+
+    def searchtemplate = {
     }
 }
