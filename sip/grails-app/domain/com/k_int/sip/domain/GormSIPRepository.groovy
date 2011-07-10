@@ -50,6 +50,10 @@ class GormSIPRepository extends SIPRepository {
       def target_class_info = grailsApplication.getArtefact("Domain",ctx.defaultType);
       if ( target_class_info != null ) {
 
+        new_template.access_points.add("id")
+        new_template.search_columns.add("id")
+        new_template.search_columns.add("class.name")
+
         target_class_info.getPersistentProperties().each { pprop ->
           // println "${pprop}..."
           if ( pprop.association ) {

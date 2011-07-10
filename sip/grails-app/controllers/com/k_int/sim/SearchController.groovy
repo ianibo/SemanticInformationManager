@@ -2,6 +2,7 @@ package com.k_int.sim
 
 import grails.converters.*
 import com.k_int.sip.domain.*
+import groovy.util.Eval;
 
 class SearchController {
 
@@ -29,13 +30,25 @@ class SearchController {
         def c = target_class.getClazz().createCriteria()
 
         println "Created criteria against target classs: ${c}"
-        result.results = c {
+        def recset = c {
           and {
             result.search_form_model.access_points.each { ap ->
               if ( ( params[ap] != null ) && ( params[ap].length() > 0 ) ) {
                 like(ap,"${params[ap]}%")
               }
             }
+          }
+        }
+
+        result.results = []
+
+        recset.each { r ->
+          // println "${r.class.name}"
+          
+          def results_row = []
+          result.results.add(results_row)
+          result.search_form_model.search_columns.each { sc  ->
+            results_row.add(Eval.x(r, 'x.' + sc))
           }
         }
 

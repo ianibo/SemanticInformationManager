@@ -21,11 +21,11 @@
           <form method="get">
             <input type="hidden" name="template" value="${params.template}"/>
             <input type="hidden" name="repo" value="${params.repo}"/>
-            <ul id="accesspoints">
+            <table>
               <g:each in="${search_form_model.access_points}" var="prop">
-              <li>${prop}:<input type="text" name="${prop}" value="${params[prop]}"/></li>
+              <tr><td style="text-align:right;">${prop} : </td><td><input type="text" name="${prop}" value="${params[prop]}"/></td></tr>
               </g:each>
-            </ul>
+            </table>
             <input type="submit" value="Search!!!"/>
           </form>
         </div>
@@ -34,7 +34,6 @@ This is the results area
           <table>
             <thead>
               <tr>
-                <th>ID</td>
                 <g:each in="${search_form_model.search_columns}" var="prop">
                   <th>${prop}</th>
                 </g:each>
@@ -44,9 +43,8 @@ This is the results area
               <g:if test="${ ( results != null )}">
                 <g:each in="${results}" var="res">
                   <tr>
-                    <td>${res.id}</td>
-                    <g:each in="${search_form_model.search_columns}" var="prop">
-                      <td>${res[prop]}</td>
+                    <g:each in="${res}" var="prop">
+                      <td>${prop}</td>
                     </g:each>
                   </tr>
                 </g:each>
