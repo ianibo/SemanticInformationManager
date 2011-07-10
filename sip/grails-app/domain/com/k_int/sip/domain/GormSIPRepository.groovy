@@ -50,7 +50,7 @@ class GormSIPRepository extends SIPRepository {
       def target_class_info = grailsApplication.getArtefact("Domain",ctx.defaultType);
       if ( target_class_info != null ) {
 
-        new_template.access_points.add("id")
+        new_template.access_points.add([propname:"id",proptype:"long"])
         new_template.search_columns.add("id")
         new_template.search_columns.add("class.name")
 
@@ -60,7 +60,7 @@ class GormSIPRepository extends SIPRepository {
             // So far, only handle scalar types
           }
           else {
-            new_template.access_points.add(pprop.name);
+            new_template.access_points.add([propname:pprop.name,proptype:pprop.typePropertyName]);
             new_template.search_columns.add(pprop.name);
           }
         }

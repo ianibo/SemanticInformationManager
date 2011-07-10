@@ -33,8 +33,16 @@ class SearchController {
         def recset = c {
           and {
             result.search_form_model.access_points.each { ap ->
-              if ( ( params[ap] != null ) && ( params[ap].length() > 0 ) ) {
-                like(ap,"${params[ap]}%")
+              if ( ( params[ap.propname] != null ) && ( params[ap.propname].length() > 0 ) ) {
+                if ( ap.proptype=='string' ) {
+                  like(ap.propname,params[ap.propname])
+                }
+                else if ( ap.proptype=='long' ) {
+                  eq(ap.propname,new Long(Long.parseLong(params[ap.propname])))
+                }
+                else {
+                  eq(ap.propname,"${params[ap.propname]}")
+                }
               }
             }
           }

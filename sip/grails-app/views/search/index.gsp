@@ -15,15 +15,14 @@
   </head>
   <body>
     Search view
-    The search view consists of a LHS which is a search form and a search results block and a RHS which is a record detail block.
       <div id="searchlhs">
         <div id="searchform" class="graypanel">
           <form method="get">
             <input type="hidden" name="template" value="${params.template}"/>
             <input type="hidden" name="repo" value="${params.repo}"/>
             <table>
-              <g:each in="${search_form_model.access_points}" var="prop">
-              <tr><td style="text-align:right;">${prop} : </td><td><input type="text" name="${prop}" value="${params[prop]}"/></td></tr>
+              <g:each in="${search_form_model.access_points}" var="ap">
+              <tr><td style="text-align:right;">${ap.propname} : </td><td><input type="text" name="${ap.propname}" value="${params[ap.propname]}"/></td></tr>
               </g:each>
             </table>
             <input type="submit" value="Search!!!"/>
