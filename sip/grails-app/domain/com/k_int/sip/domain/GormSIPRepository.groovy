@@ -41,11 +41,11 @@ class GormSIPRepository extends SIPRepository {
     }
 
     // Generate a dynamic search template for the identified context
-    String generateDynamicSearchModel(SIPContext ctx) {
+    String generateDynamicSearchTemplate(SIPContext ctx) {
       def new_template = [:]
-      new_layout.element_id='tab1'
-      new_layout.access_points = []
-      new_layout.search_columns = []
+      new_template.element_id='tab1'
+      new_template.access_points = []
+      new_template.search_columns = []
 
       def target_class_info = grailsApplication.getArtefact("Domain",ctx.defaultType);
       if ( target_class_info != null ) {
@@ -56,8 +56,8 @@ class GormSIPRepository extends SIPRepository {
             // So far, only handle scalar types
           }
           else {
-            new_layout.access_points.add(pprop.name);
-            new_layout.search_columns.add(pprop.name);
+            new_template.access_points.add(pprop.name);
+            new_template.search_columns.add(pprop.name);
           }
         }
       }

@@ -7,6 +7,8 @@
     <script src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js" charset="utf-8"></script>
 
     <script src="${resource(dir:'js',file:'SemanticEditForm.js')}" charset="utf-8"></script>
+    <script src="${resource(dir:'js',file:'SearchForm.js')}" charset="utf-8"></script>
+
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/themes/base/jquery-ui.css" type="text/css" media="all" />
     <link rel="stylesheet" href="http://static.jquery.com/ui/css/demo-docs-theme/ui.theme.css" type="text/css" media="all" />
@@ -33,7 +35,14 @@ This is the results area
 This is the record display area
       </div>
     </div>
-    <g:render template="/search/search" plugin="sip" model="['book':'book','author':'author']" />
+    <!-- g:render template="/search/search" plugin="sip" model="['book':'book','author':'author']" -->
+
+    <script language="JavaScript">
+      makeSearchForm("#accesspoints",
+                     "#searchresults",
+                     "${createLink(controller:'template',action:'searchtemplate',id:params.template)}",
+                     "${params.repo}");
+    </script>
   </body>
 </html>
 

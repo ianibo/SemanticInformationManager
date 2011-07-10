@@ -7,7 +7,7 @@ class TemplateController {
 
     def resourcetemplate = { 
 
-      println "template::index - Get template ${params.template} params=${params}"
+      println "template::resourcetemplate - Get template ${params.template} params=${params}"
       def template_json = ''
 
       if ( authenticatedUser != null ) {
@@ -35,5 +35,23 @@ class TemplateController {
     }
 
     def searchtemplate = {
+      println "template::searchtemplate - Get template ${params.template} params=${params}"
+
+      def template_json = ''
+
+      SIPSearchTemplate sst = SIPSearchTemplate.get(params.id)
+
+      if ( sst != null ) {
+        println "Locate template ${params.id}"
+        // Call the abstract getJSON method on the template. For dynamic edit templates, the json will be
+        // generated in real time, for static ones, simply pulled from the DB.
+        template_json = sst.jsonDefn()
+      }
+      else {
+        println "Unable to locate template ${params.id}"
+      }
+
+
+      render(text:template_json, contentType:'application/json')
     }
 }
