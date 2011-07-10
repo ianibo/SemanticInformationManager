@@ -4,10 +4,11 @@ class SearchController {
 
   def workspaceService
 
-  def index = { 
+  def showtemplate = { 
     def result = [:]
     result.user = authenticatedUser
     result.workspace = workspaceService.listAccessibleComponents(authenticatedUser);
-    result
+    println "SearchController::template ${params.id}"
+    render(view:'index',model:result)
   }
 }
