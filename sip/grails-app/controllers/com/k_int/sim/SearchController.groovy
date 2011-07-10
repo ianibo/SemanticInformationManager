@@ -29,16 +29,20 @@ class SearchController {
         def c = target_class.getClazz().createCriteria()
 
         println "Created criteria against target classs: ${c}"
-        //def results = c {
+        result.results = c {
+          and {
+            result.search_form_model.access_points.each { ap ->
+              if ( ( params[ap] != null ) && ( params[ap].length() > 0 ) ) {
+                like(ap,"${params[ap]}%")
+              }
+            }
+          }
+        }
+
         //	like("holderFirstName", "Fred%")
         //  maxResults(10)
-        //	order("holderLastName", "desc")
-        //}
+       	//  order("holderLastName", "desc")
 
-        // See if there are any params we need to include to execute a search...
-        result.ssearch_form_model.access_points.each { ap ->
-          println "Checking for values for ${ap}"
-        }
       }
       else {
         log.error("unable to locate default type for identified template ${params.template}")
