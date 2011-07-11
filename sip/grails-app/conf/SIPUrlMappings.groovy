@@ -4,7 +4,8 @@ class SIPUrlMappings {
       "/" (controller:"home", action:"dashboard")
       "/resource/create" (controller:"resource", action:"create")
       "/resource/update" (controller:"resource", action:"update")
-      "/template/$id" (controller:"template", action:"index")
-      "/search/$id" (controller:"search", action:"index")
+      "/template/resource/$id" (controller:"template", action:"resourcetemplate")
+      "/template/search/$id" (controller:"template", action:"searchtemplate")
+      "/search" (controller:"search", action:"showtemplate")
     }
 }
