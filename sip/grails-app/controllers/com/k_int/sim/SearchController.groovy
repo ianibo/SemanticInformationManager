@@ -9,14 +9,19 @@ class SearchController {
   def workspaceService
 
   def showtemplate = { 
+
+    log.debug("Staring SearchController::showTemplate")
+
     def result = [:]
     result.user = authenticatedUser
     result.workspace = workspaceService.listAccessibleComponents(authenticatedUser);
 
     def sst = SIPSearchTemplate.get(params.template)
+
     
     if ( sst != null ) {
-      println "Located search template, parse JSON"
+      log.debug("Located search template, parse JSON")
+
       // Search isn't like edit.. here we take the search form definition json object and parse it into a groovy structure
       // We then build the search page inside the gsp and send html
       result.search_form_model = JSON.parse(sst.jsonDefn());
@@ -29,7 +34,8 @@ class SearchController {
         println "Got instance of ${target_class.name}"
         def c = target_class.getClazz().createCriteria()
 
-        println "Created criteria against target classs: ${c}"
+        log.debug("Created criteria against target classs: ${c}")
+
         // def recset = c.list(max: 5, offset: 10) {
         def recset = c.list(max: 20) {
           and {
@@ -49,7 +55,7 @@ class SearchController {
           }
         }
 
-       println "recset.totalCount = ${recset.totalCount}"
+       log.debug("recset.totalCount = ${recset.totalCount}")
 
         result.results = []
 
@@ -73,9 +79,10 @@ class SearchController {
       }
     }
     else {
-      println "Unable to locate template with id ${params.template}"
+      log.error("Unable to locate template with id ${params.template}")
     }
 
     render(view:'index',model:result)
+    log.debug("completed SearchController::showTemplate")
   }
 }

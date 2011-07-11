@@ -20,5 +20,7 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 
+    debug   'com.k_int'
+
     warn   'org.mortbay.log'
 }
