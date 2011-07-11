@@ -30,7 +30,8 @@ class SearchController {
         def c = target_class.getClazz().createCriteria()
 
         println "Created criteria against target classs: ${c}"
-        def recset = c {
+        // def recset = c.list(max: 5, offset: 10) {
+        def recset = c.list(max: 20) {
           and {
             result.search_form_model.access_points.each { ap ->
               if ( ( params[ap.propname] != null ) && ( params[ap.propname].length() > 0 ) ) {
@@ -47,6 +48,8 @@ class SearchController {
             }
           }
         }
+
+       println "recset.totalCount = ${recset.totalCount}"
 
         result.results = []
 
