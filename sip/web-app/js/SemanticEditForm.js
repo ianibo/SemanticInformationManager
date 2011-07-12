@@ -152,7 +152,17 @@ function buildFormPanel(layout_definition, parent_element, root_object_uri) {
 
     // Finally, output an empty control to act as a "Next" value (If permitted by cardinality rules)
     // keydown to capture deletes etc keypress for only sensible keys
-    var cc = new_ul.append("<li><input id=\""+property+"["+i+"]\" data-resource-uri=\""+root_object_uri+"\" data-property=\""+property+"\" data-property-idx=\""+i+"\" data-propdef-idx=\""+p+"\" onkeyup=\"scalarUpdated(this,"+p+","+propdef.mandatory+","+propdef.cardinality+");\" type=\"text\"/>[0]</li>")
+    if ( propdef.assoc == false ) {
+      if ( propdef.type == 'string' ) {
+        var cc = new_ul.append("<li><input id=\""+property+"["+i+"]\" data-resource-uri=\""+root_object_uri+"\" data-property=\""+property+"\" data-property-idx=\""+i+"\" data-propdef-idx=\""+p+"\" onkeyup=\"scalarUpdated(this,"+p+","+propdef.mandatory+","+propdef.cardinality+");\" type=\"text\"/>[0]</li>")
+      }
+      else {
+        var cc = new_ul.append("<li>Currently unhandled scalar "+propdef.label+" of type "+propdef.type+"</li>");
+      }
+    }
+    else {
+      var cc = new_ul.append("<li>Currently unhandled association "+propdef.label+" of type "+propdef.type+"</li>");
+    }
 
     //var input_control = cc.find('input');
     //input_control.get(0).setAttribute("data-metamodel",property_model);

@@ -21,12 +21,19 @@ class GormSIPRepository extends SIPRepository {
       if ( target_class_info != null ) {
 
         target_class_info.getPersistentProperties().each { pprop ->
-          // println "${pprop}..."
+          log.debug("${pprop}...")
           if ( pprop.association ) {
             // So far, only handle scalar types
+            if ( pprop.manyToOne || pprop.oneToOne ) {
+              log.debug("Single reference")
+              new_layout.properties.add([assoc:true,label:pprop.name,property_uri:pprop.name,cardinality:'1',type:pprop.typePropertyName,mandatory:!(pprop.isOptional())])
+            }
+            else {
+              log.debug("m:n or 1:m association")
+            }
           }
           else {
-            new_layout.properties.add([label:pprop.name,property_uri:pprop.name,cardinality:'1',type:pprop.typePropertyName,mandatory:!(pprop.isOptional())])
+            new_layout.properties.add([assoc:false,label:pprop.name,property_uri:pprop.name,cardinality:'1',type:pprop.typePropertyName,mandatory:!(pprop.isOptional())])
           }
         }
       }
