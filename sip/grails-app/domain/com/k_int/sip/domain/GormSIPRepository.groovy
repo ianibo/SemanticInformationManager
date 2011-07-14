@@ -26,14 +26,24 @@ class GormSIPRepository extends SIPRepository {
             // So far, only handle scalar types
             if ( pprop.manyToOne || pprop.oneToOne ) {
               log.debug("Single reference")
-              new_layout.properties.add([assoc:true,label:pprop.name,property_uri:pprop.name,cardinality:'1',type:pprop.typePropertyName,mandatory:!(pprop.isOptional())])
+              // In the default dynamic template, we make a choice depending on the cardinality of the target set. If it's less than 20,
+              // then send a standard combobox with the necessary values and URI's to related records. If it's greater, send a more complex control
+              new_layout.properties.add([
+                                         control:'combo',
+                                         label:pprop.name,
+                                         property_uri:pprop.name,
+                                         cardinality:'1',
+                                         type:pprop.typePropertyName,
+                                         mandatory:!(pprop.isOptional()),
+                                         refTypeURI:"uri:gorm:${pprop.getReferencedDomainClass().fullName}"])
+              // log.debug("For fun, ref class, associationMap : ${pprop.getReferencedDomainClass().associationMap}")
             }
             else {
               log.debug("m:n or 1:m association")
             }
           }
           else {
-            new_layout.properties.add([assoc:false,label:pprop.name,property_uri:pprop.name,cardinality:'1',type:pprop.typePropertyName,mandatory:!(pprop.isOptional())])
+            new_layout.properties.add([control:'text',label:pprop.name,property_uri:pprop.name,cardinality:'1',type:pprop.typePropertyName,mandatory:!(pprop.isOptional())])
           }
         }
       }
@@ -139,4 +149,12 @@ class GormSIPRepository extends SIPRepository {
       }
     }
 
+    /**
+     * List the refdata values for the type referenced
+     */
+    def list(basetype) {
+      log.debug("GORM: list reference values for ${basetype}"
+      def result = []
+      result
+    }
 }
