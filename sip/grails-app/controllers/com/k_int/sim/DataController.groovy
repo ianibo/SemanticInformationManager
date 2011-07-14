@@ -1,11 +1,15 @@
 package com.k_int.sim
 
+import grails.converters.*
+import com.k_int.sip.domain.*;
+
 class DataController {
 
   def index = { }
 
   def list = {
     def result = []
+
     println "Listing for type: ${params.typeUri}"
 
     if ( params.repo != null ) {
@@ -18,6 +22,6 @@ class DataController {
       }
     }
 
-    result
+    render result as JSON
   }
 }

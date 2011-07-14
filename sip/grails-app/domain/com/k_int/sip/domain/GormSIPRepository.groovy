@@ -152,12 +152,27 @@ class GormSIPRepository extends SIPRepository {
     /**
      * List the refdata values for the type referenced
      */
-    def list(basetype) {
+    def list(basetype, retprops=[]) {
       log.debug("GORM: list reference values for ${basetype}")
       def result = []
       if ( basetype.startsWith('uri:gorm:') ) {
-        def classname = basetype.subString(9,basetype.length)
+        def classname = basetype.substring(9,basetype.length())
         println "Process list for base class : ${classname}"
+        def target_class_info = grailsApplication.getArtefact("Domain",classname);
+        if ( target_class_info != null ) {
+          if ( retprops.length == 0 ) {
+            // Just add the identifier
+            target_class_info.getClazz().list().each { e ->
+              result.add([uri:"uri:gorm:${e.class.name}:${e.id}",display:"uri:gorm:${e.class.name}:${e.id}"]);
+            }
+          }
+          else {
+            // Add each of the named properties
+            target_class_info.getClazz().list().each { e ->
+              result.add([uri:"uri:gorm:${e.class.name}:${e.id}",display:"uri:gorm:${e.class.name}:${e.id}"]);
+            }
+          }
+        }
       }
       else {
         log.error("Arrived at GORM list method, but uri ${basetype} is not for a gorm type");
