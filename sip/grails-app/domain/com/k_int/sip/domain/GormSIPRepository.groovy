@@ -155,7 +155,7 @@ class GormSIPRepository extends SIPRepository {
     def list(basetype) {
       log.debug("GORM: list reference values for ${basetype}")
       def result = []
-      if ( basetype.startsWith('uri:gorm:') {
+      if ( basetype.startsWith('uri:gorm:') ) {
         def classname = basetype.subString(9,basetype.length)
         println "Process list for base class : ${classname}"
       }
