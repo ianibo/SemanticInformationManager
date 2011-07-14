@@ -153,8 +153,15 @@ class GormSIPRepository extends SIPRepository {
      * List the refdata values for the type referenced
      */
     def list(basetype) {
-      log.debug("GORM: list reference values for ${basetype}"
+      log.debug("GORM: list reference values for ${basetype}")
       def result = []
+      if ( basetype.startsWith('uri:gorm:') {
+        def classname = basetype.subString(9,basetype.length)
+        println "Process list for base class : ${classname}"
+      }
+      else {
+        log.error("Arrived at GORM list method, but uri ${basetype} is not for a gorm type");
+      }
       result
     }
 }
