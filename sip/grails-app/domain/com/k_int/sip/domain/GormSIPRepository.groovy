@@ -29,7 +29,7 @@ class GormSIPRepository extends SIPRepository {
               // In the default dynamic template, we make a choice depending on the cardinality of the target set. If it's less than 20,
               // then send a standard combobox with the necessary values and URI's to related records. If it's greater, send a more complex control
               new_layout.properties.add([
-                                         control:'combo',
+                                         control:'assoc_combo',
                                          label:pprop.name,
                                          property_uri:pprop.name,
                                          cardinality:'1',

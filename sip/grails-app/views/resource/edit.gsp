@@ -15,7 +15,9 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script> 
   </head>
   <body>
-    The URI for the template download is ${createLink(controller:'template',action:'index',id:params.template)}
+   The URI for the template download is ${createLink(controller:'template',action:'index',id:params.template)}<br/>
+   Link to app root is ${createLink(controller:'home',action:'dashboard')}
+   
     <div id="SIMEditForm">
       <ul>
       </ul>
@@ -23,6 +25,7 @@
     <script language="JavaScript">
       makeSIMEditor("#SIMEditForm",
                     "${createLink(controller:'template',action:'resourcetemplate',id:params.template)}",
+                    "${createLink(controller:'home',action:'dashboard')}",
                     "${params.repo}",
                     ["${default_type}"]);
     </script>

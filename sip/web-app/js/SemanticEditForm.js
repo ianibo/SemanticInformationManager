@@ -30,7 +30,12 @@ var the_model = {
   // Contains all the graphs related to this model
   __graphmap : {},
 
-  __template : {}
+  __template : {},
+
+  __form_control_counter : 0,
+
+  // Handy quick access to the base URL for the server side
+  __base_url : ""
 }
 
 //var general_type_layout = {
@@ -49,7 +54,7 @@ function newBlankNode() {
 
 // Turn the div identified by editor_id into a semantic editing form
 // This function is to be used for the creation of new descriptions rather than editing existing ones
-function makeSIMEditor(editor_id, base_template_uri, target_repository_id, root_types) {
+function makeSIMEditor(editor_id, base_template_uri, base_url, target_repository_id, root_types) {
 
   var template = loadTemplateFrom(base_template_uri);
   the_model.__template = template;
@@ -64,10 +69,14 @@ function makeSIMEditor(editor_id, base_template_uri, target_repository_id, root_
   the_model.__root_graph_uri = newBlankNode();
   the_model.__graphmap[the_model.__root_graph_uri] = {};
   the_model.__graphmap[the_model.__root_graph_uri].__metamodel = {status:"new", types:root_types};
+  the_model.__base_url = base_url;
 
   the_model.__target_repository_id = target_repository_id;
 
-  var general_info_panel = buildFormPanel(template, root_element, the_model.__root_graph_uri,target_repository_id)
+  var general_info_panel = buildFormPanel(template, 
+                                          root_element, 
+                                          the_model.__root_graph_uri,
+                                          target_repository_id)
 
   // Add the generic details tab
   // Working from http://jqueryui.com/demos/tabs/#...immediately_select_a_just_added_tab
@@ -156,18 +165,13 @@ function buildFormPanel(layout_definition,
     // Finally, output an empty control to act as a "Next" value (If permitted by cardinality rules)
     // keydown to capture deletes etc keypress for only sensible keys
     if ( propdef.control == 'text' ) {
-        var cc = new_ul.append("<li><input id=\""+property+"["+i+
-                                           "]\" data-resource-uri=\""+root_object_uri+
-                                           "\" data-property=\""+property+
-                                           "\" data-property-idx=\""+i+
-                                           "\" data-propdef-idx=\""+p+
-                                           "\" onkeyup=\"scalarUpdated(this,"+p+","+propdef.mandatory+","+propdef.cardinality+");\" type=\"text\"/>[0]</li>");
+      createTextControl(new_ul,propdef,root_object_uri,i,p);
     }
-    else if ( propdef.control == 'combo' ) {
-      var cc = new_ul.append("<li>Currently unhandled control type "+propdef.control+" label: "+propdef.label+" of type "+propdef.type+" refTypeURI is "+propdef.refTypeURI+" repo is "+target_repository_id+"</li>");
+    else if ( propdef.control == 'assoc_combo' ) {
+      createAssocComboControl(new_ul,propdef,root_object_uri,target_repository_id,i,p);
     }
     else {
-      var cc = new_ul.append("<li>Currently unhandled control type "+propdef.control+" label: "+propdef.label+" of type "+propdef.type+"</li>");
+      var cc = new_ul.append("<li>Currently unhandled control type \""+propdef.control+"\" label: "+propdef.label+" of type "+propdef.type+"</li>");
     }
 
     //var input_control = cc.find('input');
@@ -302,4 +306,52 @@ function sendFormData(url) {
     }
   });
 
+}
+
+function createTextControl(parent_element,propdef,root_object_uri,i,p) {
+  // new_control_id used to be just propdef.property_uri but decided an opaque generated id is better.
+  var new_control_id = "fc"+(the_model.__form_control_counter++);
+
+  var cc = parent_element.append("<li><input id=\""+new_control_id+"["+i+
+                                       "]\" data-resource-uri=\""+root_object_uri+
+                                        "\" data-property=\""+propdef.property_uri+
+                                        "\" data-property-idx=\""+i+
+                                        "\" data-propdef-idx=\""+p+
+                                        "\" onkeyup=\"scalarUpdated(this,"+p+","+propdef.mandatory+","+propdef.cardinality+");\" type=\"text\"/>[0]</li>");
+  return cc;
+}
+
+/**
+ * An association combo control represents a reference to another object (Which can also be in the graph, or can just be a full uri reference.
+ * For DB schemas, this is essentially a foreign key reference.
+ */
+function createAssocComboControl(parent_element,propdef,root_object_uri,target_repository_id,i,p) {
+
+  // new_control_id used to be just propdef.property_uri but decided an opaque generated id is better.
+  var new_control_id = "fc"+(the_model.__form_control_counter++);
+
+  var cc = parent_element.append("<li><select id=\""+new_control_id+
+                                          "\" data-resource-uri=\""+root_object_uri+
+                                          "\" data-property=\""+propdef.property_uri+
+                                          "\" data-property-idx=\""+i+
+                                          "\" data-propdef-idx=\""+p+
+                                          "\" ><option value='1'>one</option></select> </li>");
+
+  // Having created the select control, populate it with data from the data/list service
+  populateAssocCombo(target_repository_id,propdef.refTypeURI,$(new_control_id));
+  return cc;
+}
+
+function populateAssocCombo(repository, type_uri, target_combo) {
+ $.ajax({
+    type: 'GET',
+    async: false,
+    url: the_model.__base_url+"/data/list?repo="+repository+"&typeUri="+type_uri,
+    success: function(result) {
+      alert("data:");
+    },
+    error: function(result) {
+      alert("error");
+    }
+  });
 }
