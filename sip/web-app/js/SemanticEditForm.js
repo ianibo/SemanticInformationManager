@@ -154,7 +154,7 @@ function buildFormPanel(layout_definition,
     if ( propdef.mandatory == true )
       mandatory_flag="*";
 
-    new_table.append($('<tr>').append("<td style=\"vertical-align: top\"><label for=\""+base_property_path+"["+i+"]\">"+propdef.label+mandatory_flag+"</label></td>",new_td));
+    new_table.append($('<tr>').append("<td style=\"vertical-align: top; text-align:right\"><label for=\""+base_property_path+"["+i+"]\">"+propdef.label+mandatory_flag+"</label></td>",new_td));
 
     // Work out the root of the property name (The path to an array of values)
     var base_property_path = parent_context+propdef.property_uri
@@ -335,23 +335,33 @@ function createAssocComboControl(parent_element,propdef,root_object_uri,target_r
                                           "\" data-property=\""+propdef.property_uri+
                                           "\" data-property-idx=\""+i+
                                           "\" data-propdef-idx=\""+p+
-                                          "\" ><option value='1'>one</option></select> </li>");
+                                          "\" ></select></li>");
 
   // Having created the select control, populate it with data from the data/list service
-  populateAssocCombo(target_repository_id,propdef.refTypeURI,$(new_control_id));
+  populateAssocCombo(target_repository_id,propdef.refTypeURI,$("#"+new_control_id));
   return cc;
 }
 
 function populateAssocCombo(repository, type_uri, target_combo) {
- $.ajax({
+  var url = the_model.__base_url+"data/list?repo="+repository+"&typeUri="+type_uri;
+
+  // Add a not-set which will be default, at least for now
+  target_combo.append("<option value=\"uri:sip:null\">Not set</option>");
+
+  $.ajax({
     type: 'GET',
     async: false,
-    url: the_model.__base_url+"/data/list?repo="+repository+"&typeUri="+type_uri,
+    url: url,
     success: function(result) {
-      alert("data:");
+      // Add options for each entry in the results section
+      for ( i in result ) {
+        target_combo.append("<option value=\""+result[i].uri+"\">"+result[i].display+"</option>");      
+      }
     },
     error: function(result) {
       alert("error");
     }
   });
+
+
 }
