@@ -115,6 +115,8 @@ class GormSIPRepository extends SIPRepository {
         else {
           println "Updates not yet supported"
         }
+
+        // now process property references
         println "Processing resource: ${res.key}"
         println "__metamodel = ${res.value['__metamodel']}"
         res.value.each { prop ->
@@ -122,12 +124,18 @@ class GormSIPRepository extends SIPRepository {
           if ( prop.key == '__metamodel' ) {
           }
           else {
+            // Scalar properties have a value component, which is an array of value components.
             if ( prop.value?.values?.size() > 0 ) {
               def value = prop.value.values[0]
               if ( value.__metamodel.status == 'new' || value.__metamodel.status == 'updated' ) {
-                println "Setting ${prop.key} to ${value.value}"
-                resource[prop.key] = value.value;
-                println "After set, prop in object is : \"${resource[prop.key]}\""
+                if ( value.value != null ) {
+                  println "Setting ${prop.key} to ${value.value}"
+                  resource[prop.key] = value.value;
+                  println "After set, prop in object is : \"${resource[prop.key]}\""
+                }
+                else if ( value.reference != null ) {
+                  println "Passed a reference to some other object.. need to process it! ${value.reference}"
+                }
               }
             }
           }

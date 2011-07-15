@@ -218,6 +218,9 @@ function scalarUpdated(control,defidx,mandatory,cardinality) {
 
   var value_info = metamodel.values[control_index];
 
+  if ( value_info.__metamodel.status != "new" )
+    value_info.__metamodel.status = "updated"
+
   value_info.value = control.value;
 
   console.log("scalarupdate - control index "+control_index+", len %d",metamodel.__metamodel.num_value_controls);
@@ -231,7 +234,37 @@ function scalarUpdated(control,defidx,mandatory,cardinality) {
   else {
     console.log(""+control_index+"+1 != "+metamodel.__metamodel.num_value_controls+" do not add "+(control_index+1));
   }
+}
 
+function assocComboChanged(control,defidx,mandatory,cardinality) {
+
+  var resource_uri = control.getAttribute("data-resource-uri");
+  var data_property_path = control.getAttribute("data-property");
+  var resource = the_model.__graphmap[resource_uri];
+  var metamodel = resource[data_property_path];
+  var control_index = parseInt(control.getAttribute('data-property-idx'));
+
+  console.log("assocComboChanged res:"+resource_uri+" prop:"+data_property_path+" idx:"+control_index);
+  console.log("old value: "+metamodel.values[control_index]+" new value: "+control.value);
+  console.log("metamodel for selected prop %o",metamodel);
+
+  if ( ( control_index >= metamodel.values.length ) && ( control.value.length > 0 ) ) {
+    // We are setting a value on a property which has not been set before. Need to create a new entry in the values array
+    var new_value_info = {
+      reference:"",
+      __metamodel:{
+        status:"new"
+      }
+    };
+    metamodel.values.push(new_value_info);
+  }
+
+  var value_info = metamodel.values[control_index];
+
+  if ( value_info.__metamodel.status != "new" )
+    value_info.__metamodel.status = "updated"
+
+  value_info.reference = control.value;
 }
 
 function addScalarControl(resource_uri, metamodel, property) {
@@ -335,7 +368,7 @@ function createAssocComboControl(parent_element,propdef,root_object_uri,target_r
                                           "\" data-property=\""+propdef.property_uri+
                                           "\" data-property-idx=\""+i+
                                           "\" data-propdef-idx=\""+p+
-                                          "\" ></select></li>");
+                                          "\" onchange=\"assocComboChanged(this,"+p+","+propdef.mandatory+","+propdef.cardinality+");\"></select></li>");
 
   // Having created the select control, populate it with data from the data/list service
   populateAssocCombo(target_repository_id,propdef.refTypeURI,$("#"+new_control_id));
