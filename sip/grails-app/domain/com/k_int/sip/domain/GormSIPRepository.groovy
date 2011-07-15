@@ -106,21 +106,21 @@ class GormSIPRepository extends SIPRepository {
           def new_resource_class = grailsApplication.getArtefact("Domain",new_resource_class_name)
           if ( new_resource_class != null ) {
             resource = new_resource_class.newInstance();
-            println "Created new instance of ${new_resource_class_name}"
+            log.warn("Created new instance of ${new_resource_class_name}")
           }
           else {
-            println "Unable to resolve class for name ${new_resource_class_name}"
+            log.warn("Unable to resolve class for name ${new_resource_class_name}")
           }
         }
         else {
-          println "Updates not yet supported"
+          log.warn("Updates not yet supported")
         }
 
         // now process property references
-        println "Processing resource: ${res.key}"
-        println "__metamodel = ${res.value['__metamodel']}"
+        log.debug("Processing resource: ${res.key}")
+        log.debug("__metamodel = ${res.value['__metamodel']}")
         res.value.each { prop ->
-          println "Processing property ${prop.key} = ${prop.value}"
+          log.debug("Processing property ${prop.key} = ${prop.value}")
           if ( prop.key == '__metamodel' ) {
           }
           else {
@@ -129,12 +129,18 @@ class GormSIPRepository extends SIPRepository {
               def value = prop.value.values[0]
               if ( value.__metamodel.status == 'new' || value.__metamodel.status == 'updated' ) {
                 if ( value.value != null ) {
-                  println "Setting ${prop.key} to ${value.value}"
+                  log.debug("Setting ${prop.key} to ${value.value}")
                   resource[prop.key] = value.value;
-                  println "After set, prop in object is : \"${resource[prop.key]}\""
+                  log.debug("After set, prop in object is : \"${resource[prop.key]}\"")
                 }
                 else if ( value.reference != null ) {
-                  println "Passed a reference to some other object.. need to process it! ${value.reference}"
+                  log.debug("Passed a reference to some other object.. need to process it! ${value.reference}")
+                  if ( value.reference.startsWith("_b") ) {
+                    log.warn("Reference is to a blank node, not yet implemented!");
+                  }
+                  else {
+                    resource[prop.key] = resolveGormURI(value.reference)
+                  }
                 }
               }
             }
@@ -142,17 +148,17 @@ class GormSIPRepository extends SIPRepository {
         }
 
         if ( resource != null ) {
-          println "Saving resource ${resource}"
+          log.debug("Saving resource ${resource}")
           resource.save(flush:true)
           if ( resource.hasErrors() ) {
             resource.errors.each { err ->
-              println "err: ${err}"
+              log.warn("err: ${err}")
             }
           }
  
         }
         else {
-          println "No resource to save"
+          log.debug("No resource to save")
         }
       }
     }
@@ -165,7 +171,7 @@ class GormSIPRepository extends SIPRepository {
       def result = []
       if ( basetype.startsWith('uri:gorm:') ) {
         def classname = basetype.substring(9,basetype.length())
-        println "Process list for base class : ${classname}"
+        log.debug("Process list for base class : ${classname}")
         def target_class_info = grailsApplication.getArtefact("Domain",classname);
         if ( target_class_info != null ) {
           if ( retprops.length == 0 ) {
@@ -187,4 +193,36 @@ class GormSIPRepository extends SIPRepository {
       }
       result
     }
+ 
+  def resolveGormURI(uri) {
+    log.debug("resolveGormURI(${uri})")
+    def resolved_object = null
+
+    if ( ( uri == 'uri:sip:null' ) || ( uri == '' ) || ( uri == null ) ) {
+      // Reference is to null!
+      log.debug("reference to null: ${uri}")      
+    }
+    else {
+      if ( uri.startsWith("uri:gorm:") ) {
+        def oid = uri.substring(9,uri.length())
+        int first_colon = oid.indexOf(':');
+        def classname = oid.substring(0,first_colon)
+        def keyvalue = oid.substring(first_colon+1,oid.length());
+
+        def target_class_info = grailsApplication.getArtefact("Domain",classname);
+
+        if ( target_class_info != null ) {
+          resolved_object = target_class_info.getClazz().get(keyvalue);
+          log.debug("resolve class:${classname} key:${keyvalue}")
+        }
+        else {
+          log.error("Unable to locate refereced domain class ${classname}, key ${keyvalue}")
+        }
+      }
+      else {
+        log.warn("Attempting to reference a non-gorm URI object in a GORM datamodel")
+      }
+    }
+    resolved_object
+  }
 }
