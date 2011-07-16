@@ -82,7 +82,7 @@ function makeSIMEditor(editor_id, base_template_uri, base_url, target_repository
   // Working from http://jqueryui.com/demos/tabs/#...immediately_select_a_just_added_tab
   // and http://blog.favrik.com/2009/08/11/dynamically-adding-jquery-tabs-round2/
   // tab_control.tabs('add','#'+general_type_layout.element_id,general_type_layout.tab_name);
-  tab_control.tabs('add','#'+template.element_id,template.tab_name);
+  tab_control.tabs('add','#'+template.element_id,template.label);
 
   //tab_control.tabs('add','#default',"Default Properties");
   //tab_control.tabs('add','#t1',"Default Properties1");

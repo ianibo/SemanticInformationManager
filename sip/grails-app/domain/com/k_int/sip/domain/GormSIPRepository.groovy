@@ -6,6 +6,7 @@ class GormSIPRepository extends SIPRepository {
 
     def grailsApplication
 
+
     static constraints = {
     }
 
@@ -14,7 +15,7 @@ class GormSIPRepository extends SIPRepository {
 
       def new_layout = [:]
       new_layout.element_id='tab1'
-      new_layout.tab_name='TabNameForClass'
+      new_layout.label=ctx.defaultType
       new_layout.properties = []
 
       def target_class_info = grailsApplication.getArtefact("Domain",ctx.defaultType);
@@ -30,7 +31,7 @@ class GormSIPRepository extends SIPRepository {
               // then send a standard combobox with the necessary values and URI's to related records. If it's greater, send a more complex control
               new_layout.properties.add([
                                          control:'assoc_combo',
-                                         label:pprop.name,
+                                         label:ctx.defaultType+'.'+pprop.name,
                                          property_uri:pprop.name,
                                          cardinality:'1',
                                          type:pprop.typePropertyName,
@@ -43,12 +44,17 @@ class GormSIPRepository extends SIPRepository {
             }
           }
           else {
-            new_layout.properties.add([control:'text',label:pprop.name,property_uri:pprop.name,cardinality:'1',type:pprop.typePropertyName,mandatory:!(pprop.isOptional())])
+            new_layout.properties.add([control:'text',
+                                       label:ctx.defaultType+'.'+pprop.name,
+                                       property_uri:pprop.name,
+                                       cardinality:'1',
+                                       type:pprop.typePropertyName,
+                                       mandatory:!(pprop.isOptional())])
           }
         }
       }
       else {
-        println "Unable to locate domain class"
+        log.error("Unable to locate domain class ${ctx.defaultType}")
       }
 
       def converter = new_layout as JSON;
