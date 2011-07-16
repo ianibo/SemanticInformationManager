@@ -371,12 +371,12 @@ function createAssocComboControl(parent_element,propdef,root_object_uri,target_r
                                           "\" onchange=\"assocComboChanged(this,"+p+","+propdef.mandatory+","+propdef.cardinality+");\"></select></li>");
 
   // Having created the select control, populate it with data from the data/list service
-  populateAssocCombo(target_repository_id,propdef.refTypeURI,$("#"+new_control_id));
+  populateAssocCombo(target_repository_id,propdef.refTypeURI,$("#"+new_control_id),propdef.displayProps);
   return cc;
 }
 
-function populateAssocCombo(repository, type_uri, target_combo) {
-  var url = the_model.__base_url+"data/list?repo="+repository+"&typeUri="+type_uri;
+function populateAssocCombo(repository, type_uri, target_combo, display_props) {
+  var url = the_model.__base_url+"data/list?repo="+repository+"&typeUri="+type_uri+"&displayProps="+display_props;
 
   // Add a not-set which will be default, at least for now
   target_combo.append("<option value=\"uri:sip:null\">Not set</option>");

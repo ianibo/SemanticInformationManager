@@ -36,7 +36,8 @@ class GormSIPRepository extends SIPRepository {
                                          cardinality:'1',
                                          type:pprop.typePropertyName,
                                          mandatory:!(pprop.isOptional()),
-                                         refTypeURI:"uri:gorm:${pprop.getReferencedDomainClass().fullName}"])
+                                         refTypeURI:"uri:gorm:${pprop.getReferencedDomainClass().fullName}",
+                                         displayProps:generateDisplayProps(pprop.getReferencedDomainClass())])
               // log.debug("For fun, ref class, associationMap : ${pprop.getReferencedDomainClass().associationMap}")
             }
             else {
@@ -61,6 +62,19 @@ class GormSIPRepository extends SIPRepository {
       def json_string = converter.toString()
 
       return json_string
+    }
+
+    /**
+     *  Sometimes we need to generate a property list for the target class of an association. This method returns that list.
+     */
+    def generateDisplayProps(domain_class) {
+      def result = []
+      domain_class.getPersistentProperties().each { pprop ->
+        if ( !pprop.association ) {
+          result.add(pprop.name)
+        }
+      }
+      result
     }
 
     // Generate a dynamic search template for the identified context
@@ -189,7 +203,8 @@ class GormSIPRepository extends SIPRepository {
           else {
             // Add each of the named properties
             target_class_info.getClazz().list().each { e ->
-              result.add([uri:"uri:gorm:${e.class.name}:${e.id}",display:"uri:gorm:${e.class.name}:${e.id}"]);
+              def disp_str = retprops.collect { e[it] }.join(' : ') 
+              result.add([uri:"uri:gorm:${e.class.name}:${e.id}",display:disp_str]);
             }
           }
         }
