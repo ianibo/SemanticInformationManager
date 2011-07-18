@@ -44,7 +44,7 @@ This is the results area
                   <tr>
                     <g:each in="${res}" var="prop">
                       <td><g:if test="${prop.selaction=='__edit'}">
-                        <a href="edit">${prop.v}</a>
+                        <g:link controller="resource" action="edit" params="${['repo':params.repo,'uri':'uri:gorm:class.name:32']}">${prop.v}</g:link>
                       </g:if>
                       <g:else>${prop.v}</g:else></td>
                     </g:each>
