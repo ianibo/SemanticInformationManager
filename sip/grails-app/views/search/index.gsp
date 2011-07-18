@@ -42,9 +42,9 @@ This is the results area
               <g:if test="${ ( results != null )}">
                 <g:each in="${results}" var="res">
                   <tr>
-                    <g:each in="${res}" var="prop">
+                    <g:each in="${res.v}" var="prop">
                       <td><g:if test="${prop.selaction=='__edit'}">
-                        <g:link controller="resource" action="edit" params="${['repo':params.repo,'uri':'uri:gorm:class.name:32']}">${prop.v}</g:link>
+                        <g:link controller="resource" action="edit" params="${['repo':params.repo,'uri':res.uri]}">${prop.v}</g:link>
                       </g:if>
                       <g:else>${prop.v}</g:else></td>
                     </g:each>

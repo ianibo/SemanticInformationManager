@@ -62,10 +62,12 @@ class SearchController {
         recset.each { r ->
           // println "${r.class.name}"
           
-          def results_row = []
+          def results_row = [:]
+          results_row.v = []
+          results_row.uri = "uri:gorm:${r.class.name}:${r.id}"
           result.results.add(results_row)
           result.search_form_model.search_columns.each { sc  ->
-            results_row.add([v:Eval.x(r, 'x.' + sc.property),selaction:sc.selaction])
+            results_row.v.add([v:Eval.x(r, 'x.' + sc.property),selaction:sc.selaction])
           }
         }
 
