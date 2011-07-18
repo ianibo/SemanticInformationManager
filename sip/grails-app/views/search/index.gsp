@@ -34,7 +34,7 @@ This is the results area
             <thead>
               <tr>
                 <g:each in="${search_form_model.search_columns}" var="prop">
-                  <th>${prop}</th>
+                  <th>${prop.property}</th>
                 </g:each>
               </tr>
             </thead>
@@ -43,7 +43,10 @@ This is the results area
                 <g:each in="${results}" var="res">
                   <tr>
                     <g:each in="${res}" var="prop">
-                      <td>${prop}</td>
+                      <td><g:if test="${prop.selaction=='__edit'}">
+                        <a href="edit">${prop.v}</a>
+                      </g:if>
+                      <g:else>${prop.v}</g:else></td>
                     </g:each>
                   </tr>
                 </g:each>

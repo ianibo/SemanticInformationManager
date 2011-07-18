@@ -7,18 +7,22 @@ class ResourceController {
 
   def workspaceService
 
+  /**
+   *  Edit is passed a repo id and a resource URI (Which must be resolvable in the context of the repo)
+   */
   def edit = { 
+    log.debug("edit - params=${params}")
+
     def result = [:]
     result.user = authenticatedUser
     result.workspace = workspaceService.listAccessibleComponents(authenticatedUser);
     result.repo = SIPRepository.get(params.repo)
 
-    
-
     result
   }
 
   def create = { 
+    log.debug("create - params=${params}")
     def result = [:]
     result.user = authenticatedUser
     result.workspace = workspaceService.listAccessibleComponents(authenticatedUser);
@@ -28,7 +32,7 @@ class ResourceController {
   }
 
   def update = { 
-    println "update - params=${params}"
+    log.debug("update - params=${params}")
 
     //def result = [:]
     //result.user = authenticatedUser
@@ -58,5 +62,6 @@ class ResourceController {
 
     render result as JSON
   }
+
 
 }

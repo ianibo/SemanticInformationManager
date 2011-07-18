@@ -65,7 +65,7 @@ class SearchController {
           def results_row = []
           result.results.add(results_row)
           result.search_form_model.search_columns.each { sc  ->
-            results_row.add(Eval.x(r, 'x.' + sc))
+            results_row.add([v:Eval.x(r, 'x.' + sc.property),selaction:sc.selaction])
           }
         }
 

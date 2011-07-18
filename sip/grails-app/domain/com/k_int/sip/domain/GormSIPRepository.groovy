@@ -88,8 +88,9 @@ class GormSIPRepository extends SIPRepository {
       if ( target_class_info != null ) {
 
         new_template.access_points.add([propname:"id",proptype:"long"])
-        new_template.search_columns.add("id")
-        new_template.search_columns.add("class.name")
+
+        new_template.search_columns.add([property:"id",selaction:'__edit'])
+        new_template.search_columns.add([property:"class.name"])
 
         target_class_info.getPersistentProperties().each { pprop ->
           // println "${pprop}..."
@@ -98,7 +99,7 @@ class GormSIPRepository extends SIPRepository {
           }
           else {
             new_template.access_points.add([propname:pprop.name,proptype:pprop.typePropertyName]);
-            new_template.search_columns.add(pprop.name);
+            new_template.search_columns.add([property:pprop.name]);
           }
         }
       }
