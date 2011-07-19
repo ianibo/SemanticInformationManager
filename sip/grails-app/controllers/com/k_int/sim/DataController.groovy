@@ -37,6 +37,9 @@ class DataController {
     def result = [:]
     if ( params.repo != null ) {
       def repo = SIPRepository.get(params.repo)
+
+      // Ask the repository object concerned to add the resource idenfied by the uri to the result graph
+      repo.addToGraph(result, params.uri);
     }
 
     render result as JSON

@@ -258,4 +258,26 @@ class GormSIPRepository extends SIPRepository {
     def context = SIPContext.findByDefaultType(target_obj.class.name);
     return 14
   }
+
+  def addToGraph(result, uri) {
+    log.debug("addToGraph... ${uri}");
+    def obj = resolveURI(uri)
+    def graph_object = []
+    result[uri] = graph_object;
+
+    // Get hold of the domain class definition
+    def grails_domain_class_info = grailsApplication.getArtefact("Domain", obj.class.name);
+
+    // For each property
+    grails_domain_class_info.getPersistentProperties().each { pprop ->
+      // If it's an association property
+      if ( pprop.association ) {
+      }
+      else { // Else add the value
+        // Each property is mapped to a map object containing an array of values. For GORM repositoris, these values must be scalar on non association properties
+        graph_object[pprop.name] = [values: [obj[pprop.name]]];
+      }
+    }
+  }
+
 }
