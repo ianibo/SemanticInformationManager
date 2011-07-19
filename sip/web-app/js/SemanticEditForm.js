@@ -54,10 +54,22 @@ function newBlankNode() {
 
 // Turn the div identified by editor_id into a semantic editing form
 // This function is to be used for the creation of new descriptions rather than editing existing ones
-function makeSIMEditor(editor_id, base_template_uri, base_url, target_repository_id, root_types) {
+function makeSIMEditor(editor_id, 
+                       base_template_uri, 
+                       base_url, 
+                       target_repository_id, 
+                       target_uri, 
+                       root_types) {
 
   var template = loadTemplateFrom(base_template_uri);
   the_model.__template = template;
+
+  if ( target_uri ) {
+    console.log("target_uri is present, load object");
+  }
+  else {
+    console.log("no target_uri, go directly to create new");
+  }
 
   // Get hold of the element
   root_element = $( editor_id )

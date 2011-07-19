@@ -160,7 +160,7 @@ class GormSIPRepository extends SIPRepository {
                     log.warn("Reference is to a blank node, not yet implemented!");
                   }
                   else {
-                    resource[prop.key] = resolveGormURI(value.reference)
+                    resource[prop.key] = resolveURI(value.reference)
                   }
                 }
               }
@@ -216,8 +216,8 @@ class GormSIPRepository extends SIPRepository {
       result
     }
  
-  def resolveGormURI(uri) {
-    log.debug("resolveGormURI(${uri})")
+  def resolveURI(uri) {
+    log.debug("resolveURI(${uri})")
     def resolved_object = null
 
     if ( ( uri == 'uri:sip:null' ) || ( uri == '' ) || ( uri == null ) ) {
@@ -245,6 +245,17 @@ class GormSIPRepository extends SIPRepository {
         log.warn("Attempting to reference a non-gorm URI object in a GORM datamodel")
       }
     }
+
+    log.debug("resolveURI returning instance of ${resolved_object?.class.name} with ID ${resolved_object?.id}")
+
     resolved_object
+  }
+
+  def getDefaultTemplateFor(uri, user) {
+    log.debug("getDefaultTemplateFor(${uri},${user})");
+    def target_obj = resolveURI(uri);
+    log.debug("Find context for type ${target_obj.class.name}")
+    def context = SIPContext.findByDefaultType(target_obj.class.name);
+    return 14
   }
 }
