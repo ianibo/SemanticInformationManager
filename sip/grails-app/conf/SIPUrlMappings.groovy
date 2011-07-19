@@ -8,6 +8,7 @@ class SIPUrlMappings {
       "/template/resource/$id" (controller:"template", action:"resourcetemplate")
       "/template/search/$id" (controller:"template", action:"searchtemplate")
       "/data/list" (controller:"data", action:"list")
+      "/data/graph" (controller:"data", action:"graph")
       "/search" (controller:"search", action:"showtemplate")
     }
 }

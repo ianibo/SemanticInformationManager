@@ -64,13 +64,6 @@ function makeSIMEditor(editor_id,
   var template = loadTemplateFrom(base_template_uri);
   the_model.__template = template;
 
-  if ( target_uri ) {
-    console.log("target_uri is present, load object");
-  }
-  else {
-    console.log("no target_uri, go directly to create new");
-  }
-
   // Get hold of the element
   root_element = $( editor_id )
 
@@ -84,6 +77,14 @@ function makeSIMEditor(editor_id,
   the_model.__base_url = base_url;
 
   the_model.__target_repository_id = target_repository_id;
+
+  if ( target_uri ) {
+    console.log("target_uri is present, load object");
+    importGraph(target_repository_id, the_model.__graphmap, target_uri);
+  }
+  else {
+    console.log("no target_uri, go directly to create new");
+  }
 
   var general_info_panel = buildFormPanel(template, 
                                           root_element, 
@@ -409,4 +410,21 @@ function populateAssocCombo(repository, type_uri, target_combo, display_props) {
   });
 
 
+}
+
+function importGraph(repository, graphmap, target_uri) {
+  var url = the_model.__base_url+"data/graph?repo="+repository+"&uri="+target_uri;
+  console.log("get graph "+url);
+
+  $.ajax({
+    type: 'GET',
+    async: false,
+    url: url,
+    success: function(result) {
+      alert("Loaded graph for "+url);
+    },
+    error: function(result) {
+      alert("importGraph error for "+url);
+    }
+  });
 }

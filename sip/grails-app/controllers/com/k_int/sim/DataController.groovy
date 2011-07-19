@@ -30,4 +30,15 @@ class DataController {
 
     render result as JSON
   }
+
+  def graph = {
+    log.debug("graph:: ${params.repo} : ${params.uri}");
+    // Result is a map of graphs, with a named node at the root, and possibly many blank nodes for associated objects like array entries
+    def result = [:]
+    if ( params.repo != null ) {
+      def repo = SIPRepository.get(params.repo)
+    }
+
+    render result as JSON
+  }
 }
