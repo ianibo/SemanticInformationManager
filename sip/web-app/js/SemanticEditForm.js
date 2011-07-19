@@ -3,7 +3,14 @@
 /* -> A model is an object instance with some links to view data
  *   model :
  *      __metamodel
- *      property:1
+ *      property:1 {
+ *        __metamodel: {
+ *          property_value_containers:[]
+ *          num_value_controls :
+ *        }
+ *        values: [
+ *                ]
+ *      }
  *      property:2
  *      property:3
  *      property:n
@@ -30,8 +37,10 @@ var the_model = {
   // Contains all the graphs related to this model
   __graphmap : {},
 
+  // Pointer to the json definition of the template as loaded from the server
   __template : {},
 
+  // Counter to easily create new unique control identifiers
   __form_control_counter : 0,
 
   // Handy quick access to the base URL for the server side
@@ -71,19 +80,21 @@ function makeSIMEditor(editor_id,
   var tab_control = root_element.tabs();
 
   // For now, we are going to assume we are creating a new record
-  the_model.__root_graph_uri = newBlankNode();
-  the_model.__graphmap[the_model.__root_graph_uri] = {};
-  the_model.__graphmap[the_model.__root_graph_uri].__metamodel = {status:"new", types:root_types};
   the_model.__base_url = base_url;
 
   the_model.__target_repository_id = target_repository_id;
 
   if ( target_uri ) {
     console.log("target_uri is present, load object");
+    the_model.__root_graph_uri = target_uri;
     importGraph(target_repository_id, the_model.__graphmap, target_uri);
+    the_model.__graphmap[the_model.__root_graph_uri].__metamodel = {status:"ok", types:root_types};
   }
   else {
     console.log("no target_uri, go directly to create new");
+    the_model.__root_graph_uri = newBlankNode();
+    the_model.__graphmap[the_model.__root_graph_uri] = {};
+    the_model.__graphmap[the_model.__root_graph_uri].__metamodel = {status:"new", types:root_types};
   }
 
   var general_info_panel = buildFormPanel(template, 
@@ -143,11 +154,19 @@ function buildFormPanel(layout_definition,
         },
         'values' : [
         ]
-      }
+      };
       root_object[property] = property_model;
     }
     else {
       console.log("Model for resource "+root_object_uri+" already contains info for property "+property);
+      // Check if we need to initialise the metamodel (Which we will need to do if this graph has been loaded from the server)
+      if ( ! property_model.__metamodel ) {
+        console.log("Initialise metamodel for property defn");
+        property_model.__metamodel = {
+          property_value_containers : [],
+          num_value_controls : 1
+        };
+      }
     }
 
     var new_ul = $(document.createElement('ul'));
@@ -178,7 +197,7 @@ function buildFormPanel(layout_definition,
     // Finally, output an empty control to act as a "Next" value (If permitted by cardinality rules)
     // keydown to capture deletes etc keypress for only sensible keys
     if ( propdef.control == 'text' ) {
-      createTextControl(new_ul,propdef,root_object_uri,i,p);
+      createTextControl(new_ul,propdef,root_object_uri,i,p,property_model.values);
     }
     else if ( propdef.control == 'assoc_combo' ) {
       createAssocComboControl(new_ul,propdef,root_object_uri,target_repository_id,i,p);
@@ -280,17 +299,7 @@ function assocComboChanged(control,defidx,mandatory,cardinality) {
   value_info.reference = control.value;
 }
 
-function addScalarControl(resource_uri, metamodel, property) {
 
-  var i = metamodel.__metamodel.num_value_controls++;
-
-  // For each panel where a control appears for this property...
-  for ( idx in metamodel.__metamodel.property_value_containers ) {
-    // Get hold of the container element for each occurence of this property on a layout
-    var c = metamodel.__metamodel.property_value_containers[idx];
-    c.append("<li><input id=\""+property+"["+i+"]\"  data-resource-uri=\""+resource_uri+"\" data-property=\""+property+"\" data-property-idx=\""+i+"\" onkeyup=\"scalarUpdated(this);\" type=\"text\"/>["+i+"]</li>")
-  }
-}
 
 function loadTemplateFrom(template_uri) {
   console.log("Loading template "+template_uri);
@@ -354,16 +363,49 @@ function sendFormData(url) {
 
 }
 
-function createTextControl(parent_element,propdef,root_object_uri,i,p) {
+// We are adding a control for a property. Because each property can appear in multiple locations
+// we iterate over each occurence of this property in the layout. (These will be the parent <li> elements)
+// and we add a control to each occurence of this property in the form.
+function addScalarControl(resource_uri, 
+                          propdef, 
+                          property) {
+  var i = propdef.__metamodel.num_value_controls++;
+
+  // For each panel where a control appears for this property...
+  for ( idx in propdef.__metamodel.property_value_containers ) {
+    // Get hold of the container element for each occurence of this property on a layout
+    var c = propdef.__metamodel.property_value_containers[idx];
+    var new_control_id = "fc"+(the_model.__form_control_counter++);
+
+    c.append("<li><input id=\""+new_control_id+"["+idx+
+                                       "]\"  data-resource-uri=\""+resource_uri+
+                                       "\" data-property=\""+property+
+                                       "\" data-property-idx=\""+i+
+                                       "\" onkeyup=\"scalarUpdated(this);\" type=\"text\"/>["+i+"]</li>")
+  }
+}
+
+function createTextControl(parent_element,
+                           propdef,
+                           root_object_uri,
+                           i,
+                           p,
+                           values) {
   // new_control_id used to be just propdef.property_uri but decided an opaque generated id is better.
   var new_control_id = "fc"+(the_model.__form_control_counter++);
+  var value = ""
+
+  console.log("create control, values = "+values);
+  if ( values.length > 0 )
+    value=values[0];
 
   var cc = parent_element.append("<li><input id=\""+new_control_id+"["+i+
                                        "]\" data-resource-uri=\""+root_object_uri+
                                         "\" data-property=\""+propdef.property_uri+
                                         "\" data-property-idx=\""+i+
                                         "\" data-propdef-idx=\""+p+
-                                        "\" onkeyup=\"scalarUpdated(this,"+p+","+propdef.mandatory+","+propdef.cardinality+");\" type=\"text\"/>[0]</li>");
+                                        "\" onkeyup=\"scalarUpdated(this,"+p+","+propdef.mandatory+","+propdef.cardinality+");\" type=\"text\""+
+                                        " value=\""+value+"\"/>[0]</li>");
   return cc;
 }
 
@@ -421,7 +463,13 @@ function importGraph(repository, graphmap, target_uri) {
     async: false,
     url: url,
     success: function(result) {
-      alert("Loaded graph for "+url);
+      alert("Loaded graph for "+url);      
+      console.log("loading graph %o",result);
+      for (var uri in result) {
+        the_model.__graphmap[uri] = result[uri]
+      }
+      console.log("OK");
+      console.log("Loaded graph model: %o",the_model);
     },
     error: function(result) {
       alert("importGraph error for "+url);
