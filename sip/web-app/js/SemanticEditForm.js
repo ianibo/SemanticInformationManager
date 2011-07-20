@@ -9,6 +9,7 @@
  *          num_value_controls :
  *        }
  *        values: [
+ *          [ value: thevalue, __metamodel: 'ok'|'updated' ]
  *                ]
  *      }
  *      property:2
@@ -395,9 +396,15 @@ function createTextControl(parent_element,
   var new_control_id = "fc"+(the_model.__form_control_counter++);
   var value = ""
 
-  console.log("create control, values = "+values);
-  if ( values.length > 0 )
-    value=values[0];
+  console.log("create control, values = %o",values);
+
+  if ( values.length > 0 ) {
+    value=values[0].value;
+    console.log("Setting value to "+value);
+  }
+  else {
+    console.log("values.length <= 0");
+  }
 
   var cc = parent_element.append("<li><input id=\""+new_control_id+"["+i+
                                        "]\" data-resource-uri=\""+root_object_uri+

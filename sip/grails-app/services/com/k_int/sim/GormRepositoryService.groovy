@@ -284,7 +284,7 @@ class GormRepositoryService {
           def ov = obj[pprop.name];
           log.debug("Set proprty [${pprop.name}] value is ${ov}");
           if ( ov != null ) {
-            graph_object[pprop.name] = [values: [ obj[pprop.name] ] ];
+            graph_object[pprop.name] = [values: [ [ value: obj[pprop.name], __metamodel:[status:'ok'] ] ] ];
           }
           // else the column was null, don't bother setting.
         }
