@@ -24,7 +24,7 @@ class DataController {
       def repo = SIPRepository.get(params.repo)
       if ( repo != null ) {
         // Located repository, now ask the repository to deal with the list request
-        result = repo.list(params.typeUri, props)
+        result = repo.repository().list(params.typeUri, props)
       }
     }
 
@@ -39,7 +39,7 @@ class DataController {
       def repo = SIPRepository.get(params.repo)
 
       // Ask the repository object concerned to add the resource idenfied by the uri to the result graph
-      repo.addToGraph(result, params.uri);
+      repo.repository().addToGraph(result, params.uri);
     }
 
     render result as JSON
