@@ -470,7 +470,7 @@ function importGraph(repository, graphmap, target_uri) {
     async: false,
     url: url,
     success: function(result) {
-      alert("Loaded graph for "+url);      
+      // alert("Loaded graph for "+url);      
       console.log("loading graph %o",result);
       for (var uri in result) {
         the_model.__graphmap[uri] = result[uri]
