@@ -2,6 +2,7 @@ package com.k_int.sip.domain
 
 class SIPEditTemplate {
 
+    String shortcode
     String name
     String uri
     SIPContext owner

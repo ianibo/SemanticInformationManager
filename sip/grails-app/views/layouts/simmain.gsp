@@ -12,7 +12,7 @@
       <div id="simheader" class="yui3-g">
         <div class="yui3-u graypanel" style="width:100%">
           <div style="float:right;">Welcome back ${user.username}</div>
-          <div>Semantic Information Manager</div>
+          <div>Semantic Information Portal</div>
         </div>
       </div>
 

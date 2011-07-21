@@ -47,7 +47,8 @@ class DomainModelInfoService {
                                    contextType:'GORM').save(flush:true);
 
           println "Create new default dynamic search context uri:gorm:${domainclass.fullName}/defaultsearch"
-          DynamicSIPSearchTemplate dst = new DynamicSIPSearchTemplate(name:'Default Search',
+          DynamicSIPSearchTemplate dst = new DynamicSIPSearchTemplate(shortcode:"_dyn_gorm_srch_${domainclass.shortName}",
+                                                                      name:'Default Search',
                                                                       uri:"uri:gorm:${domainclass.fullName}/defaultsearch",
                                                                       owner:ctx).save(flush:true);
           if (dst.hasErrors()) {
@@ -59,6 +60,7 @@ class DomainModelInfoService {
 
           println "Create new default dynamic edit context uri:gorm:${domainclass.fullName}/defaultedit"
           DynamicSIPEditTemplate det = new DynamicSIPEditTemplate(name:'Default Editor',
+                                                                  shortcode:"_dyn_gorm_edit_${domainclass.shortName}",
                                                                   uri:"uri:gorm:${domainclass.fullName}/defaultedit",
                                                                   owner:ctx).save(flush:true);
 
