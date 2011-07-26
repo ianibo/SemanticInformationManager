@@ -16,7 +16,8 @@
   </head>
   <body>
    The URI for the template download is ${createLink(controller:'template',action:'index',id:template_id)}<br/>
-   Link to app root is ${createLink(controller:'home',action:'dashboard')}
+   Link to app root is ${createLink(controller:'home',action:'dashboard')}<br/>
+   Graph loaded from <a href="${createLink(controller:'home',action:'dashboard')}data/graph?repo=${params.repo}&amp;uri=${params.uri}">${createLink(controller:'home',action:'dashboard')}data/graph?repo=${params.repo}&amp;uri=${params.uri}</a>
    
     <div id="SIMEditForm">
       <ul>
