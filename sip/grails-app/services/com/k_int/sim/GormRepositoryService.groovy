@@ -165,7 +165,9 @@ class GormRepositoryService {
                     log.warn("Reference is to a blank node, not yet implemented!");
                   }
                   else {
-                    resource[prop.key] = resolveURI(value.reference)
+                    def linked_resource = resolveURI(value.reference)
+                    // log.debug("Setting property ${prop.key} to ${linked_resource}")
+                    resource[prop.key] = linked_resource
                   }
                 }
               }
@@ -276,17 +278,26 @@ class GormRepositoryService {
 
       // For each property
       grails_domain_class_info.getPersistentProperties().each { pprop ->
-        // If it's an association property
-        if ( pprop.association ) {
-        }
-        else { // Else add the value
-          // Each property is mapped to a map object containing an array of values. For GORM repositoris, these values must be scalar on non association properties
-          def ov = obj[pprop.name];
-          log.debug("Set proprty [${pprop.name}] value is ${ov}");
-          if ( ov != null ) {
-            graph_object[pprop.name] = [values: [ [ value: obj[pprop.name], __metamodel:[status:'ok'] ] ] ];
+       def ov = obj[pprop.name];
+       log.debug("add proprty [${pprop.name}] value is ${ov}");
+
+        if ( ov != null ) {
+          // If it's an association property
+          if ( pprop.association ) {
+            log.debug("proprty ${pprop.name} is an assoc");
+            if ( pprop.manyToOne || pprop.oneToOne ) {
+              graph_object[pprop.name] = [values: [ [ reference: "gorm:${ov.class.name}:${ov.id}", __metamodel:[status:'ok'] ] ] ];
+            }
+            else {
+              log.debug("Unhandled association type")
+            }
           }
-          // else the column was null, don't bother setting.
+          else { // Else add the value
+            // Each property is mapped to a map object containing an array of values. For GORM repositoris, these values must be scalar on non association properties
+            log.debug("Set proprty [${pprop.name}] value is ${ov}");
+            graph_object[pprop.name] = [values: [ [ value: obj[pprop.name], __metamodel:[status:'ok'] ] ] ];
+            // else the column was null, don't bother setting.
+          }
         }
       }
     }

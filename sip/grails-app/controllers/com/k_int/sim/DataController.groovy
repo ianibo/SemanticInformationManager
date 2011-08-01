@@ -7,6 +7,9 @@ class DataController {
 
   def index = { }
 
+  /**
+   * Generate a list of tuples from the identifed repository. Often used to generate selection lists etc.
+   */
   def list = {
     def result = []
 
@@ -31,6 +34,10 @@ class DataController {
     render result as JSON
   }
 
+  /**
+   * Export the identified object as a graph. Blank nodes are created for local types (Hibernate Components for example)
+   * anywhere there is a link with another domain object a URI is posted that this call should also be able to render using the graph call.
+   */
   def graph = {
     log.debug("graph:: ${params.repo} : ${params.uri}");
     // Result is a map of graphs, with a named node at the root, and possibly many blank nodes for associated objects like array entries

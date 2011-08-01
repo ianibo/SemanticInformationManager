@@ -284,12 +284,15 @@ function assocComboChanged(control,defidx,mandatory,cardinality) {
   if ( ( control_index >= metamodel.values.length ) && ( control.value.length > 0 ) ) {
     // We are setting a value on a property which has not been set before. Need to create a new entry in the values array
     var new_value_info = {
-      reference:"",
+      reference:control.value,
       __metamodel:{
         status:"new"
       }
     };
     metamodel.values.push(new_value_info);
+  }
+  else {
+    alert("Not implemented - set reference value.. please fix!");
   }
 
   var value_info = metamodel.values[control_index];
