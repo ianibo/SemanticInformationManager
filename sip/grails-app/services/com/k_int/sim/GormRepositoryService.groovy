@@ -286,7 +286,7 @@ class GormRepositoryService {
           if ( pprop.association ) {
             log.debug("proprty ${pprop.name} is an assoc");
             if ( pprop.manyToOne || pprop.oneToOne ) {
-              graph_object[pprop.name] = [values: [ [ reference: "gorm:${ov.class.name}:${ov.id}", __metamodel:[status:'ok'] ] ] ];
+              graph_object[pprop.name] = [values: [ [ reference: "uri:gorm:${ov.class.name}:${ov.id}", __metamodel:[status:'ok'] ] ] ];
             }
             else {
               log.debug("Unhandled association type")

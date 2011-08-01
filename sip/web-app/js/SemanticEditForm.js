@@ -201,7 +201,7 @@ function buildFormPanel(layout_definition,
       createTextControl(new_ul,propdef,root_object_uri,i,p,property_model.values);
     }
     else if ( propdef.control == 'assoc_combo' ) {
-      createAssocComboControl(new_ul,propdef,root_object_uri,target_repository_id,i,p);
+      createAssocComboControl(new_ul,propdef,root_object_uri,target_repository_id,i,p,property_model.values);
     }
     else {
       var cc = new_ul.append("<li>Currently unhandled control type \""+propdef.control+"\" label: "+propdef.label+" of type "+propdef.type+"</li>");
@@ -423,20 +423,40 @@ function createTextControl(parent_element,
  * An association combo control represents a reference to another object (Which can also be in the graph, or can just be a full uri reference.
  * For DB schemas, this is essentially a foreign key reference.
  */
-function createAssocComboControl(parent_element,propdef,root_object_uri,target_repository_id,i,p) {
+function createAssocComboControl(parent_element,
+                                 propdef,
+                                 root_object_uri,
+                                 target_repository_id,
+                                 i,
+                                 p,
+                                 values) {
 
   // new_control_id used to be just propdef.property_uri but decided an opaque generated id is better.
   var new_control_id = "fc"+(the_model.__form_control_counter++);
+  var ref = ""
+  if ( values.length > 0 ) {
+    ref=values[0].reference;
+  }
 
   var cc = parent_element.append("<li><select id=\""+new_control_id+
                                           "\" data-resource-uri=\""+root_object_uri+
                                           "\" data-property=\""+propdef.property_uri+
                                           "\" data-property-idx=\""+i+
                                           "\" data-propdef-idx=\""+p+
+                                          "\" value=\""+ref+
                                           "\" onchange=\"assocComboChanged(this,"+p+","+propdef.mandatory+","+propdef.cardinality+");\"></select></li>");
 
+  var select_control = $("#"+new_control_id);
+
   // Having created the select control, populate it with data from the data/list service
-  populateAssocCombo(target_repository_id,propdef.refTypeURI,$("#"+new_control_id),propdef.displayProps);
+  populateAssocCombo(target_repository_id,propdef.refTypeURI,select_control,propdef.displayProps);
+
+  if ( ref != "" ) {
+    console.log("Setting reference for %o combo to "+ref, select_control);
+    select_control.val(ref);
+    // select_control.selectedIndex = 1;
+  }
+
   return cc;
 }
 
