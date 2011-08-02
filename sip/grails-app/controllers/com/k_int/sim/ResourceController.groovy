@@ -27,6 +27,7 @@ class ResourceController {
         result.template_id = params.template;
       }
       else {
+        log.debug("No explicit template given, identify appropriate default for uri: ${params.uri}");
         result.template_id = result.repo.repository().getDefaultTemplateFor(params.uri, authenticatedUser)
       }
     }

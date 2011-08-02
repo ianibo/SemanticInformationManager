@@ -10,7 +10,7 @@ class TemplateController {
 
     def resourcetemplate = { 
 
-      log.debug("template::resourcetemplate - Get template ${params.template} params=${params}")
+      log.debug("template::resourcetemplate - Get resource template ${params.template} params=${params}")
       def template_json = ''
 
       if ( authenticatedUser != null ) {

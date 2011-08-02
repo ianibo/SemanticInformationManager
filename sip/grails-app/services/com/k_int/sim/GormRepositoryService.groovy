@@ -263,7 +263,14 @@ class GormRepositoryService {
     def target_obj = resolveURI(uri);
     log.debug("Find context for type ${target_obj.class.name}")
     def context = SIPContext.findByDefaultType(target_obj.class.name);
-    return 14
+
+    // Now find the first template for this context which is accessible to the user (Or one thats flagged as default in the template, or the user config)
+    def temp = SIPEditTemplate.findByOwner(context);
+
+    if ( temp != null )
+      return temp.id
+
+    return null
   }
 
   def addToGraph(result, uri) {
