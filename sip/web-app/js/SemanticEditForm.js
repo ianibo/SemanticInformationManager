@@ -494,7 +494,16 @@ function createAssocListControl(parent_element,
                                 i,
                                 p,
                                 values) {
-  var cc = parent_element.append("<li>New assoc_list \""+propdef.control+"\" label: "+propdef.label+" of type "+propdef.type+"</li>");
+
+  var table_control_id = "fc"+(the_model.__form_control_counter++);
+  var cc = parent_element.append("<li>New assoc_list \""+propdef.control+"\" label: "+propdef.label+" of type "+propdef.type+
+                                 "<table><thead><tr><th>child uri</th></tr></thead><tbody id=\""+table_control_id+"\"></tbody></table>"+
+                                 "</li>");
+  var tbody = $("#"+table_control_id)
+  for ( v in values ) {
+    var value = values[v];
+    tbody.append("<tr><td>"+value.reference+"</td></tr>");
+  }
 }
 
 
