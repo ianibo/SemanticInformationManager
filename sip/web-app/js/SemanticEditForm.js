@@ -204,7 +204,7 @@ function buildFormPanel(layout_definition,
       createAssocComboControl(new_ul,propdef,root_object_uri,target_repository_id,i,p,property_model.values);
     }
     else if ( propdef.control == 'assoc_list' ) {
-      var cc = new_ul.append("<li>New assoc_list \""+propdef.control+"\" label: "+propdef.label+" of type "+propdef.type+"</li>");
+      createAssocListControl(new_ul,propdef,root_object_uri,target_repository_id,i,p,property_model.values)
     }
     else {
       var cc = new_ul.append("<li>Currently unhandled control type \""+propdef.control+"\" label: "+propdef.label+" of type "+propdef.type+"</li>");
@@ -486,6 +486,17 @@ function populateAssocCombo(repository, type_uri, target_combo, display_props) {
 
 
 }
+
+function createAssocListControl(parent_element,
+                                propdef,
+                                root_object_uri,
+                                target_repository_id,
+                                i,
+                                p,
+                                values) {
+  var cc = parent_element.append("<li>New assoc_list \""+propdef.control+"\" label: "+propdef.label+" of type "+propdef.type+"</li>");
+}
+
 
 function importGraph(repository, graphmap, target_uri) {
   var url = the_model.__base_url+"data/graph?repo="+repository+"&uri="+target_uri;

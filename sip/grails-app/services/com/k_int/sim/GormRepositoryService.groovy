@@ -41,13 +41,21 @@ class GormRepositoryService {
             }
             else if ( pprop.manyToMany || pprop.oneToMany ) {
               // Add a new table control, which lists rows from an association and creates a form for adding new entries 
+              def coldefs = []
+              def refclassname = pprop.getReferencedDomainClass().fullName
+              pprop.getReferencedDomainClass().getPersistentProperties().each { rp ->
+                coldefs.add([
+                             property_uri:rp.name, 
+                             label:refclassname+'.'+rp.name])
+              }
               new_layout.properties.add([
                                          control:'assoc_list',
                                          label:ctx.defaultType+'.'+pprop.name,
                                          property_uri:pprop.name,
                                          cardinality:'n',
                                          type:pprop.typePropertyName,
-                                         mandatory:!(pprop.isOptional())])
+                                         mandatory:!(pprop.isOptional()),
+                                         cols:coldefs])
             }
             else {
               log.error("Unhandled association type")
