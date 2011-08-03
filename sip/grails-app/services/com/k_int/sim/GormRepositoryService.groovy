@@ -39,8 +39,18 @@ class GormRepositoryService {
                                          displayProps:generateDisplayProps(pprop.getReferencedDomainClass())])
               // log.debug("For fun, ref class, associationMap : ${pprop.getReferencedDomainClass().associationMap}")
             }
+            else if ( pprop.manyToMany || pprop.oneToMany ) {
+              // Add a new table control, which lists rows from an association and creates a form for adding new entries 
+              new_layout.properties.add([
+                                         control:'assoc_list',
+                                         label:ctx.defaultType+'.'+pprop.name,
+                                         property_uri:pprop.name,
+                                         cardinality:'n',
+                                         type:pprop.typePropertyName,
+                                         mandatory:!(pprop.isOptional())])
+            }
             else {
-              log.debug("m:n or 1:m association")
+              log.error("Unhandled association type")
             }
           }
           else {
