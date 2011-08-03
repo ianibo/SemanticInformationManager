@@ -295,7 +295,17 @@ class GormRepositoryService {
             if ( pprop.manyToOne || pprop.oneToOne ) {
               graph_object[pprop.name] = [values: [ [ reference: "uri:gorm:${ov.class.name}:${ov.id}", __metamodel:[status:'ok'] ] ] ];
             }
-            else {
+            else if (pprop.manyToMany || pprop.oneToMany ) {
+              log.debug("manyToMany to oneToMany");
+              // We are serialising a collection. A number of things need to happen. We treat everything as a list for now.
+              def collection_items_list = []
+              obj[pprop.name]?.each { collection_item ->
+                // If the collection_item is a persistent class, then we simply add a reference to the URI of the resource.
+                collection_items_list.add([reference:"uri:gorm:${collection_item.class.name}:${collection_item.id}", __metamodel:[status:'ok']])
+                // Otherwise, we need to add a blank node to the graph and serialize the data.
+              }
+              graph_object[pprop.name] = [values: collection_items_list]
+            } else {
               log.debug("Unhandled association type")
             }
           }
