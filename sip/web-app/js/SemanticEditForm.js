@@ -512,11 +512,22 @@ function createAssocListControl(parent_element,
     tbody.append("<tr><td>"+value.reference+"</td></tr>");
   }
 
-  tbody.append("<tr id=\""+table_control_id+"_f\"></tr>");
+  tbody.append("<tr id=\""+table_control_id+"_f\"><td/></tr>");
 
   var footer_row = $("#"+table_control_id+"_f");
   for ( c in propdef.cols ) {
-    footer_row.append("<td><input type=\"text\"/></td>");
+    var coldef = propdef.cols[c];
+    switch ( coldef.type ) {
+      case 'string':
+        footer_row.append("<td><input type=\"text\"/></td>");
+        break;
+      case 'boolean':
+        footer_row.append("<td><input type=\"checkbox\"/></td>");
+        break;
+      default:
+        footer_row.append("<td>"+coldef.type+"</td>");
+        break;
+    }
   }
   // Final step is to paint the text boxes that will act as the search / create controls
 }

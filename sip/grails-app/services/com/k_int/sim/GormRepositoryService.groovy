@@ -44,7 +44,8 @@ class GormRepositoryService {
               def coldefs = []
               def refclassname = pprop.getReferencedDomainClass().fullName
               pprop.getReferencedDomainClass().getPersistentProperties().each { rp ->
-                if ( rp.association ) {
+                if ( rp.association ||
+                     rp.typePropertyName=='set' ) {   // Some collections are not associations, but serialized types.
                   // Don't do associations yet, when the time comes, they will be rendered as combo boxes on the search line
                 }
                 else {
