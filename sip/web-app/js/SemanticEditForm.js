@@ -497,13 +497,28 @@ function createAssocListControl(parent_element,
 
   var table_control_id = "fc"+(the_model.__form_control_counter++);
   var cc = parent_element.append("<li>New assoc_list \""+propdef.control+"\" label: "+propdef.label+" of type "+propdef.type+
-                                 "<table><thead><tr><th>child uri</th></tr></thead><tbody id=\""+table_control_id+"\"></tbody></table>"+
+                                 "<table><thead><tr id=\""+table_control_id+"_h\"><th>child uri</th></tr></thead><tbody id=\""+table_control_id+"_b\"></tbody></table>"+
                                  "</li>");
-  var tbody = $("#"+table_control_id)
+  var headers = $("#"+table_control_id+"_h")
+  var tbody = $("#"+table_control_id+"_b")
+
+  for ( c in propdef.cols ) {
+    var coldef = propdef.cols[c];
+    headers.append("<th>"+coldef.label+"</th>");
+  }
+
   for ( v in values ) {
     var value = values[v];
     tbody.append("<tr><td>"+value.reference+"</td></tr>");
   }
+
+  tbody.append("<tr id=\""+table_control_id+"_f\"></tr>");
+
+  var footer_row = $("#"+table_control_id+"_f");
+  for ( c in propdef.cols ) {
+    footer_row.append("<td><input type=\"text\"/></td>");
+  }
+  // Final step is to paint the text boxes that will act as the search / create controls
 }
 
 

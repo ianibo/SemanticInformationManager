@@ -15,7 +15,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/i18n/jquery-ui-i18n.min.js" type="text/javascript"></script> 
   </head>
   <body>
-   Template loaded from <a href="${createLink(controller:'template',action:'index',id:template_id)}">${createLink(controller:'template',action:'index',id:template_id)}</a><br/>
+   Template loaded from <a href="${createLink(controller:'template',action:'resourcetemplate',id:template_id)}">${createLink(controller:'template',action:'index',id:template_id)}</a><br/>
    Link to app root is ${createLink(controller:'home',action:'dashboard')}<br/>
    Graph loaded from <a href="${createLink(controller:'home',action:'dashboard')}data/graph?repo=${params.repo}&amp;uri=${params.uri}">${createLink(controller:'home',action:'dashboard')}data/graph?repo=${params.repo}&amp;uri=${params.uri}</a>
    

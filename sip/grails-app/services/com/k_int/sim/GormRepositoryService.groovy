@@ -44,9 +44,17 @@ class GormRepositoryService {
               def coldefs = []
               def refclassname = pprop.getReferencedDomainClass().fullName
               pprop.getReferencedDomainClass().getPersistentProperties().each { rp ->
-                coldefs.add([
-                             property_uri:rp.name, 
-                             label:refclassname+'.'+rp.name])
+                if ( rp.association ) {
+                  // Don't do associations yet, when the time comes, they will be rendered as combo boxes on the search line
+                }
+                else {
+                  // Scalar value of some type
+                  coldefs.add([
+                               property_uri:rp.name, 
+                               label:refclassname+'.'+rp.name,
+                               type:rp.typePropertyName,
+                               mandatory:!(rp.isOptional())])
+                }
               }
               new_layout.properties.add([
                                          control:'assoc_list',
