@@ -512,23 +512,48 @@ function createAssocListControl(parent_element,
     tbody.append("<tr><td>"+value.reference+"</td></tr>");
   }
 
-  tbody.append("<tr id=\""+table_control_id+"_f\"><td/></tr>");
+  // We now add a footer row with a button to pop up an add dialog (Search for rows / create)
+  tbody.append("<tr id=\""+table_control_id+"_f\"><td colspan=\""+propdef.cols.length+"\"><button type=\"button\" id=\""+table_control_id+"_button\">Add</button></td></tr>");
 
-  var footer_row = $("#"+table_control_id+"_f");
-  for ( c in propdef.cols ) {
-    var coldef = propdef.cols[c];
-    switch ( coldef.type ) {
-      case 'string':
-        footer_row.append("<td><input type=\"text\"/></td>");
-        break;
-      case 'boolean':
-        footer_row.append("<td><input type=\"checkbox\"/></td>");
-        break;
-      default:
-        footer_row.append("<td>"+coldef.type+"</td>");
-        break;
-    }
-  }
+  var popupDivJQ=$(document.createElement("div"));
+  popupDivJQ.attr("id",""+table_control_id+"_popup");
+  popupDivJQ.attr("class","popup");
+  popupDivJQ.html("Hello world");
+
+  // Frontal popup
+  var table_add_dialog = popupDivJQ.dialog({
+              autoOpen: false,
+              title: "Add Row Popup Dialog",
+              closeOnEscape: true,
+              modal: true,
+              width: 450,
+              beforeClose: function(event, ui) {
+              }
+  });
+
+  $('#'+table_control_id+'_button').click(function() {
+    alert("boo");
+    table_add_dialog.dialog('open');
+    return false;
+  });
+
+
+
+  // var footer_row = $("#"+table_control_id+"_f");
+  // for ( c in propdef.cols ) {
+  //   var coldef = propdef.cols[c];
+  //   switch ( coldef.type ) {
+  //     case 'string':
+  //       footer_row.append("<td><input type=\"text\"/></td>");
+  //       break;
+  //     case 'boolean':
+  //       footer_row.append("<td><input type=\"checkbox\"/></td>");
+  //       break;
+  //     default:
+  //       footer_row.append("<td>"+coldef.type+"</td>");
+  //       break;
+  //   }
+  // }
   // Final step is to paint the text boxes that will act as the search / create controls
 }
 

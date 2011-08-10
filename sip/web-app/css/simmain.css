@@ -62,11 +62,29 @@ div.graypanel {
 }
 
 ul.plainlist {
-		list-style: none;
-		margin: 0;
-		padding: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
     padding-left:10px;
-		border: none;
+    border: none;
 }
+
+.popup {
+    display:none;
+    position:fixed;
+    height:400px;
+    width:600px;
+    background:#FFFFFF;
+    border:2px solid #cecece;
+/*    z-index:2;*/
+    padding:10px;
+    overflow: scroll;
+}
+
+.hidden {
+    display: none;
+}
+
+
 
 
