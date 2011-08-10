@@ -550,7 +550,7 @@ function createAssocListControl(parent_element,
      .append(input_table)
      .append(results_grid);
   
-  // Frontal popup
+  // add row popup
   var table_add_dialog = popupDivJQ.dialog({
               autoOpen: false,
               title: "Add Row Popup Dialog",
