@@ -537,6 +537,8 @@ function createAssocListControl(parent_element,
   // Each value is passed both as a parameter and a result column to the data service.
   var input_controls = [];
 
+  popup_info.control_array = input_controls;
+
   // Create the form at the top of the popup that will be used to search, or to create new rows
   for ( c in propdef.cols ) {
     var coldef = propdef.cols[c];
@@ -547,15 +549,16 @@ function createAssocListControl(parent_element,
         // input_row.append("<td><input type=\"text\"/></td>");
         new_controlJQ = $(document.createElement("input"));
         new_controlJQ.attr("type","text");
-        new_controlJQ.attr("onkeyup","alert('"+popup_info_id+"');");
-        //input_controls.append(new_controlJQ);
+        new_controlJQ.attr("onkeyup","popupControlsChanged('"+popup_info_id+"');");
+        input_controls.push(new_controlJQ);
         break;
       case 'boolean':
         // input_row.append("<td><input type=\"checkbox\"/></td>");
         new_controlJQ = $(document.createElement("input"));
         new_controlJQ.attr("type","checkbox");
-        new_controlJQ.attr("onchange","alert('"+popup_info_id+"');");
-        //input_controls.append(new_controlJQ);
+        new_controlJQ.attr("value","true");
+        new_controlJQ.attr("onchange","popupControlsChanged('"+popup_info_id+"');");
+        input_controls.push(new_controlJQ);
         break;
       default:
         new_controlJQ = $(document.createElement("div"));
@@ -568,7 +571,6 @@ function createAssocListControl(parent_element,
   }
   input_tableJQ.append(label_rowJQ);
   input_tableJQ.append(input_rowJQ);
-
 
   var results_grid = $(document.createElement("div"));
 
@@ -592,9 +594,19 @@ function createAssocListControl(parent_element,
     return false;
   });
 
-
-
   // Final step is to paint the text boxes that will act as the search / create controls
+}
+
+function popupControlsChanged(popup_id) {
+  var popup_info = the_model.__popup_form_info[popup_id];
+  var msg = "Changes to popup "+popup_id;
+
+  for ( c in popup_info.control_array ) {
+    var ctrl = popup_info.control_array[c];
+    msg = msg + " : " + ctrl.val();
+  }
+
+  alert(msg);
 }
 
 
