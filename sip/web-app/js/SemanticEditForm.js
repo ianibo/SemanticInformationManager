@@ -603,7 +603,19 @@ function popupControlsChanged(popup_id) {
 
   for ( c in popup_info.control_array ) {
     var ctrl = popup_info.control_array[c];
-    msg = msg + " : " + ctrl.val();
+    switch ( ctrl.attr("type") ) {
+      case "text":
+        msg = msg + " : " + ctrl.val();
+        break;
+      case "checkbox":
+        if ( ctrl.attr("checked") ) {
+          msg = msg + " : true ";
+        }
+        else {
+          msg = msg + " : false ";
+        }
+        break;
+    }
   }
 
   alert(msg);
