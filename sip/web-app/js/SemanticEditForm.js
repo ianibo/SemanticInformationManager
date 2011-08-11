@@ -45,7 +45,11 @@ var the_model = {
   __form_control_counter : 0,
 
   // Handy quick access to the base URL for the server side
-  __base_url : ""
+  __base_url : "",
+
+  __popup_form_counter : 0,
+
+  __popup_form_info : {}
 }
 
 //var general_type_layout = {
@@ -519,35 +523,57 @@ function createAssocListControl(parent_element,
   popupDivJQ.attr("id",""+table_control_id+"_popup");
   popupDivJQ.attr("class","popup");
 
+  var popup_info_id = "p"+(the_model.__popup_form_counter++);
+  var popup_info = {};
+  the_model.__popup_form_info[popup_info_id] = popup_info;
+
   // Table for input fields
   // JQuery data table for results.
-  var input_table = $(document.createElement("table"));
-  var label_row = $(document.createElement("tr"));
-  var input_row = $(document.createElement("tr"));
+  var input_tableJQ = $(document.createElement("table"));
+  var label_rowJQ = $(document.createElement("tr"));
+  var input_rowJQ = $(document.createElement("tr"));
 
+  // Input controls array is a list of controls that are used to form a request to the data service.
+  // Each value is passed both as a parameter and a result column to the data service.
+  var input_controls = [];
+
+  // Create the form at the top of the popup that will be used to search, or to create new rows
   for ( c in propdef.cols ) {
     var coldef = propdef.cols[c];
-    label_row.append("<td>"+coldef.label+"</td>");
+    label_rowJQ.append("<td>"+coldef.label+"</td>");
+    var new_controlJQ = null;
     switch ( coldef.type ) {
       case 'string':
-        input_row.append("<td><input type=\"text\"/></td>");
+        // input_row.append("<td><input type=\"text\"/></td>");
+        new_controlJQ = $(document.createElement("input"));
+        new_controlJQ.attr("type","text");
+        new_controlJQ.attr("onkeyup","alert('"+popup_info_id+"');");
+        //input_controls.append(new_controlJQ);
         break;
       case 'boolean':
-        input_row.append("<td><input type=\"checkbox\"/></td>");
+        // input_row.append("<td><input type=\"checkbox\"/></td>");
+        new_controlJQ = $(document.createElement("input"));
+        new_controlJQ.attr("type","checkbox");
+        new_controlJQ.attr("onchange","alert('"+popup_info_id+"');");
+        //input_controls.append(new_controlJQ);
         break;
       default:
-        input_row.append("<td>"+coldef.type+"</td>");
+        new_controlJQ = $(document.createElement("div"));
+        new_controlJQ.html(coldef.type);
         break;
     }
+    var new_tdJQ = $(document.createElement("td"));
+    new_tdJQ.append(new_controlJQ);
+    input_rowJQ.append(new_tdJQ);
   }
-  input_table.append(label_row);
-  input_table.append(input_row);
+  input_tableJQ.append(label_rowJQ);
+  input_tableJQ.append(input_rowJQ);
 
 
   var results_grid = $(document.createElement("div"));
 
   popupDivJQ
-     .append(input_table)
+     .append(input_tableJQ)
      .append(results_grid);
   
   // add row popup
