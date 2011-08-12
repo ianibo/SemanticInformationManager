@@ -270,8 +270,7 @@ class GormRepositoryService {
             tuple.uri = "uri:gorm:${e.class.name}:${e.id}"
             retprops.each { rp ->
               tuple[rp] = e[rp];
-            }
-            
+            }            
             result.add(tuple);
           }
 
