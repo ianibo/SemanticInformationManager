@@ -652,7 +652,7 @@ function performPopupSearch(repository, type_uri, parent_div, display_props) {
 
   // Add a not-set which will be default, at least for now
   // target_combo.append("<option value=\"uri:sip:null\">Not set</option>");
-  // parent_div.append("<p>Hello</p>");
+  parent_div.append(url+"</br>");
 
   $.ajax({
     type: 'GET',
@@ -661,7 +661,9 @@ function performPopupSearch(repository, type_uri, parent_div, display_props) {
     success: function(result) {
       // Add options for each entry in the results section
       for ( i in result ) {
-        parent_div.append(result[i].display+"<br/>");
+        for ( val in result[i] ) {
+          parent_div.append(result[i][val]+"<br/>");      
+        }
       //  target_combo.append("<option value=\""+result[i].uri+"\">"+result[i].display+"</option>");      
     
       }

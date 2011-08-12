@@ -53,7 +53,7 @@ class DataController {
 
       if ( repo != null ) {
         // Located repository, now ask the repository to deal with the list request
-        result = repo.repository().list(params.typeUri, props)
+        result = repo.repository().qry(params.typeUri, props)
       }
     }
 

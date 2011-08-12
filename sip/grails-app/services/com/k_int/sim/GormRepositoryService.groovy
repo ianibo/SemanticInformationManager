@@ -251,6 +251,37 @@ class GormRepositoryService {
       }
       result
     }
+
+    /**
+     * Query the refdata values for the type referenced
+     */
+    def qry(basetype, retprops=[]) {
+      log.debug("GORM: qry reference values for ${basetype}")
+      def result = []
+      if ( basetype.startsWith('uri:gorm:') ) {
+        def classname = basetype.substring(9,basetype.length())
+        log.debug("Process qry for base class : ${classname}")
+        def target_class_info = grailsApplication.getArtefact("Domain",classname);
+        if ( target_class_info != null ) {
+
+          // For each object found by the search, add an entry.
+          target_class_info.getClazz().list().each { e ->
+            def tuple = [:]
+            tuple.uri = "uri:gorm:${e.class.name}:${e.id}"
+            retprops.each { rp ->
+              tuple[rp] = e[rp];
+            }
+            
+            result.add(tuple);
+          }
+
+        }
+      }
+      else {
+        log.error("Arrived at GORM list method, but uri ${basetype} is not for a gorm type");
+      }
+      result
+    }
  
   def resolveURI(uri) {
     log.debug("resolveURI(${uri})")
