@@ -61,9 +61,11 @@ class GormRepositoryService {
                                          control:'assoc_list',
                                          label:ctx.defaultType+'.'+pprop.name,
                                          property_uri:pprop.name,
-                                         cardinality:'n',
+                                         cardinality: pprop.manyToMany ? "m:n" : " 1:m",
+                                         allowCreate: false,
                                          type:pprop.typePropertyName,
                                          mandatory:!(pprop.isOptional()),
+                                         refTypeURI:"uri:gorm:${pprop.getReferencedDomainClass().fullName}",
                                          cols:coldefs])
             }
             else {

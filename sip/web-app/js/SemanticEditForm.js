@@ -538,12 +538,22 @@ function createAssocListControl(parent_element,
   var input_controls = [];
 
   popup_info.control_array = input_controls;
+  popup_info.propdef = propdef;
+  popup_info.display_props = "";
 
   // Create the form at the top of the popup that will be used to search, or to create new rows
   for ( c in propdef.cols ) {
     var coldef = propdef.cols[c];
     label_rowJQ.append("<td>"+coldef.label+"</td>");
+
+    // Add the property for this column to the list of props to display.
+    if (popup_info.display_props.length > 0 )
+      popup_info.display_props = popup_info.display_props + ",";
+
+    popup_info.display_props = popup_info.display_props + coldef.property_uri;
+
     var new_controlJQ = null;
+
     switch ( coldef.type ) {
       case 'string':
         // input_row.append("<td><input type=\"text\"/></td>");
@@ -572,11 +582,14 @@ function createAssocListControl(parent_element,
   input_tableJQ.append(label_rowJQ);
   input_tableJQ.append(input_rowJQ);
 
-  var results_grid = $(document.createElement("div"));
+  var results_gridJQ = $(document.createElement("div"));
+  results_gridJQ.attr("id",table_control_id+"_resultsgrid");
+
+  popup_info.results_gridJQ = results_gridJQ;
 
   popupDivJQ
      .append(input_tableJQ)
-     .append(results_grid);
+     .append(results_gridJQ);
   
   // add row popup
   var table_add_dialog = popupDivJQ.dialog({
@@ -618,7 +631,46 @@ function popupControlsChanged(popup_id) {
     }
   }
 
-  alert(msg);
+  msg = msg + "<br/> Search for: " + popup_info.propdef.refTypeURI;
+
+  // Clear down any previous results... Really we should be filling out a jquery datagrid or something here
+  popup_info.results_gridJQ.empty();
+
+  performPopupSearch(the_model.__target_repository_id,
+                     popup_info.propdef.refTypeURI,
+                     popup_info.results_gridJQ,
+                     popup_info.display_props);
+
+  // Form the query we will send off to the data service
+  // popup_info.results_gridJQ.html(msg);
+
+}
+
+function performPopupSearch(repository, type_uri, parent_div, display_props) {
+
+  var url = the_model.__base_url+"data/qry?repo="+repository+"&typeUri="+type_uri+"&displayProps="+display_props;
+
+  // Add a not-set which will be default, at least for now
+  // target_combo.append("<option value=\"uri:sip:null\">Not set</option>");
+  // parent_div.append("<p>Hello</p>");
+
+  $.ajax({
+    type: 'GET',
+    async: false,
+    url: url,
+    success: function(result) {
+      // Add options for each entry in the results section
+      for ( i in result ) {
+        parent_div.append(result[i].display+"<br/>");
+      //  target_combo.append("<option value=\""+result[i].uri+"\">"+result[i].display+"</option>");      
+    
+      }
+    },
+    error: function(result) {
+      alert("error");
+    }
+  });
+
 }
 
 
