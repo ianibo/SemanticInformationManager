@@ -700,6 +700,9 @@ function performPopupSearch(repository,
 
 function linkObjectToCollection(resource_to_add_uri, target_resource_uri, target_property_uri) {
   alert("link "+resource_to_add_uri+" to collection identified by property "+target_property_uri+" of resource "+target_resource_uri);
+  // Check that the item is not already in the collection
+  // Add it if present
+  // Call method to display (Which will cause the new item graph to be loaded)
 }
 
 function importGraph(repository, graphmap, target_uri) {
