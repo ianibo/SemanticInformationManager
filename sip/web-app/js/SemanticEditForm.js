@@ -530,6 +530,8 @@ function createAssocListControl(parent_element,
   // Table for input fields
   // JQuery data table for results.
   var input_tableJQ = $(document.createElement("table"));
+  var input_table_theadJQ = $(document.createElement("thead"));
+  var input_table_tbodyJQ = $(document.createElement("thead"));
   var label_rowJQ = $(document.createElement("tr"));
   var input_rowJQ = $(document.createElement("tr"));
 
@@ -579,17 +581,19 @@ function createAssocListControl(parent_element,
     new_tdJQ.append(new_controlJQ);
     input_rowJQ.append(new_tdJQ);
   }
-  input_tableJQ.append(label_rowJQ);
-  input_tableJQ.append(input_rowJQ);
+  
+  input_table_theadJQ.append(label_rowJQ);
+  input_table_theadJQ.append(input_rowJQ);
 
-  var results_gridJQ = $(document.createElement("div"));
-  results_gridJQ.attr("id",table_control_id+"_resultsgrid");
+  input_tableJQ.append(input_table_theadJQ);
+  input_tableJQ.append(input_table_tbodyJQ);
 
-  popup_info.results_gridJQ = results_gridJQ;
+  //var results_gridJQ = $(document.createElement("div"));
+  //results_gridJQ.attr("id",table_control_id+"_resultsgrid");
 
-  popupDivJQ
-     .append(input_tableJQ)
-     .append(results_gridJQ);
+  popup_info.results_tbodyJQ = input_table_tbodyJQ;
+
+  popupDivJQ.append(input_tableJQ);
   
   // add row popup
   var table_add_dialog = popupDivJQ.dialog({
@@ -634,11 +638,11 @@ function popupControlsChanged(popup_id) {
   msg = msg + "<br/> Search for: " + popup_info.propdef.refTypeURI;
 
   // Clear down any previous results... Really we should be filling out a jquery datagrid or something here
-  popup_info.results_gridJQ.empty();
+  popup_info.results_tbodyJQ.empty();
 
   performPopupSearch(the_model.__target_repository_id,
                      popup_info.propdef.refTypeURI,
-                     popup_info.results_gridJQ,
+                     popup_info.results_tbodyJQ,
                      popup_info.display_props);
 
   // Form the query we will send off to the data service
@@ -646,13 +650,13 @@ function popupControlsChanged(popup_id) {
 
 }
 
-function performPopupSearch(repository, type_uri, parent_div, display_props) {
+// parent_tbody is the parent table body to which the data rows should be appended.
+function performPopupSearch(repository, type_uri, parent_tbodyJQ, display_props) {
 
   var url = the_model.__base_url+"data/qry?repo="+repository+"&typeUri="+type_uri+"&displayProps="+display_props;
 
   // Add a not-set which will be default, at least for now
   // target_combo.append("<option value=\"uri:sip:null\">Not set</option>");
-  parent_div.append(url+"</br>");
 
   $.ajax({
     type: 'GET',
@@ -661,9 +665,11 @@ function performPopupSearch(repository, type_uri, parent_div, display_props) {
     success: function(result) {
       // Add options for each entry in the results section
       for ( i in result ) {
+        var new_trJQ = $(document.createElement("tr"));
         for ( val in result[i] ) {
-          parent_div.append(result[i][val]+"<br/>");      
+          new_trJQ.append("<td>"+result[i][val]+"</td>");
         }
+        parent_tbodyJQ.append(new_trJQ);
       //  target_combo.append("<option value=\""+result[i].uri+"\">"+result[i].display+"</option>");      
     
       }
