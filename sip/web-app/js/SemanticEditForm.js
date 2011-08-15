@@ -542,6 +542,11 @@ function createAssocListControl(parent_element,
   popup_info.control_array = input_controls;
   popup_info.propdef = propdef;
   popup_info.display_props = "";
+  popup_info.root_object_uri = root_object_uri;
+
+  // Append a blank node at the start of the table.. For data rows this will hold the "Add" link.
+  label_rowJQ.append("<td></td>");
+  input_rowJQ.append("<td></td>");
 
   // Create the form at the top of the popup that will be used to search, or to create new rows
   for ( c in propdef.cols ) {
@@ -642,6 +647,8 @@ function popupControlsChanged(popup_id) {
 
   performPopupSearch(the_model.__target_repository_id,
                      popup_info.propdef.refTypeURI,
+                     popup_info.propdef.property_uri,
+                     popup_info.root_object_uri,
                      popup_info.results_tbodyJQ,
                      popup_info.display_props);
 
@@ -651,7 +658,12 @@ function popupControlsChanged(popup_id) {
 }
 
 // parent_tbody is the parent table body to which the data rows should be appended.
-function performPopupSearch(repository, type_uri, parent_tbodyJQ, display_props) {
+function performPopupSearch(repository, 
+                            type_uri, 
+                            property_uri, 
+                            root_object_uri,
+                            parent_tbodyJQ, 
+                            display_props) {
 
   var url = the_model.__base_url+"data/qry?repo="+repository+"&typeUri="+type_uri+"&displayProps="+display_props;
 
@@ -667,7 +679,13 @@ function performPopupSearch(repository, type_uri, parent_tbodyJQ, display_props)
       for ( i in result ) {
         var new_trJQ = $(document.createElement("tr"));
         for ( val in result[i] ) {
-          new_trJQ.append("<td>"+result[i][val]+"</td>");
+          if ( val == 'uri' ) {
+            // Link actions
+            new_trJQ.append("<td><a href=\"javascript:linkObjectToCollection('"+result[i][val]+"','"+root_object_uri+"','"+property_uri+"');\">Add</a></td>");
+          }
+          else {
+            new_trJQ.append("<td>"+result[i][val]+"</td>");
+          }
         }
         parent_tbodyJQ.append(new_trJQ);
       //  target_combo.append("<option value=\""+result[i].uri+"\">"+result[i].display+"</option>");      
@@ -678,9 +696,11 @@ function performPopupSearch(repository, type_uri, parent_tbodyJQ, display_props)
       alert("error");
     }
   });
-
 }
 
+function linkObjectToCollection(resource_to_add_uri, target_resource_uri, target_property_uri) {
+  alert("link "+resource_to_add_uri+" to collection identified by property "+target_property_uri+" of resource "+target_resource_uri);
+}
 
 function importGraph(repository, graphmap, target_uri) {
   var url = the_model.__base_url+"data/graph?repo="+repository+"&uri="+target_uri;
