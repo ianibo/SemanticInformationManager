@@ -147,14 +147,16 @@ class GormRepositoryService {
         def resource_uri = res.key
         def properties = res.value
 
+        def domain_class_definition = null;
+
         // For each resource in the graph, firstly find out if we are creating a new one, or editing
         // an existing resource.
         if ( properties.__metamodel.status == 'new' ) {
           // Resources in the GORM repository can only have 1 type, they aren't like traditional RDF descriptions in that way.
           def new_resource_class_name = properties.__metamodel.types[0]
-          def new_resource_class = grailsApplication.getArtefact("Domain",new_resource_class_name)
-          if ( new_resource_class != null ) {
-            resource = new_resource_class.newInstance();
+          domain_class_definition = grailsApplication.getArtefact("Domain",new_resource_class_name)
+          if ( domain_class_definition != null ) {
+            resource = domain_class_definition.newInstance();
             log.warn("Created new instance of ${new_resource_class_name}")
           }
           else {
@@ -165,6 +167,10 @@ class GormRepositoryService {
           log.warn("Updates not yet supported")
           if ( ! resource_uri.startsWith('_b') ) {  // Don't process blank nodes
             resource = resolveURI(resource_uri)
+            if ( resource != null ) {
+              log.debug("Looking up domain class ${resource.class.name}");
+              domain_class_definition = grailsApplication.getArtefact("Domain",resource.class.name);
+            }
           }
           else {
             log.warn("Not processing blank node ${resource_uri}")
@@ -181,22 +187,38 @@ class GormRepositoryService {
           else {
             // Scalar properties have a value component, which is an array of value components.
             if ( prop.value?.values?.size() > 0 ) {
-              def value = prop.value.values[0]
-              if ( value.__metamodel.status == 'new' || value.__metamodel.status == 'updated' ) {
-                if ( value.value != null ) {
-                  log.debug("Setting ${prop.key} to ${value.value}")
-                  resource[prop.key] = value.value;
-                  log.debug("After set, prop in object is : \"${resource[prop.key]}\"")
-                }
-                else if ( value.reference != null ) {
-                  log.debug("Passed a reference to some other object.. need to process it! ${value.reference}")
-                  if ( value.reference.startsWith("_b") ) {
-                    log.warn("Reference is to a blank node, not yet implemented!");
+              // In the database implementation, scalar properties can only have a single value.
+              // Here we need to get some information about the actual type of the property.
+              def propinfo = domain_class_definition.getPropertyByName(prop.key)
+              if ( propinfo.oneToMany || propinfo.manyToMany ) {
+                log.debug("Process collection property");
+                // Cycle through the prop.value.values, testing the metamodel of each entry for new/updated records.
+                prop.value.values.each { col_obj ->
+                  if ( col_obj.__metamodel.status == 'new' ) {
+                    log.debug("Resolve ${col_obj.resource} and add it to this collection property");
+                    resource[prop.key].add(resolveURI(col_obj.resource))
                   }
-                  else {
-                    def linked_resource = resolveURI(value.reference)
-                    // log.debug("Setting property ${prop.key} to ${linked_resource}")
-                    resource[prop.key] = linked_resource
+                }
+              }
+              else {
+                log.debug("Process scalar property");
+                def value = prop.value.values[0]
+                if ( value.__metamodel.status == 'new' || value.__metamodel.status == 'updated' ) {
+                  if ( value.value != null ) {
+                    log.debug("Setting ${prop.key} to ${value.value}")
+                    resource[prop.key] = value.value;
+                    log.debug("After set, prop in object is : \"${resource[prop.key]}\"")
+                  }
+                  else if ( value.reference != null ) {
+                    log.debug("Passed a reference to some other object.. need to process it! ${value.reference}")
+                    if ( value.reference.startsWith("_b") ) {
+                      log.warn("Reference is to a blank node, not yet implemented!");
+                    }
+                    else {
+                      def linked_resource = resolveURI(value.reference)
+                      // log.debug("Setting property ${prop.key} to ${linked_resource}")
+                      resource[prop.key] = linked_resource
+                    }
                   }
                 }
               }

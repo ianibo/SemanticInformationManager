@@ -703,6 +703,15 @@ function linkObjectToCollection(resource_to_add_uri, target_resource_uri, target
   // Check that the item is not already in the collection
   // Add it if present
   // Call method to display (Which will cause the new item graph to be loaded)
+
+  // The object attached to the URI in the graph is a map of properties. 
+  // Each property is an object itself.
+  // For collection properties, the values member contains an array of objects
+  // Each object in the values array has 2 properties: "reference" and "__metamodel". reference is the uri of the object, __metamodel has a status
+  //   which indicates the status of that entry. "OK" or "New" or "Updated" or "Removed"
+  var object_info = the_model.__graphmap[target_resource_uri];
+  var property = object_info[target_property_uri];
+  property.values.push({'resource':resource_to_add_uri, '__metamodel':{'status':'new'}});
 }
 
 function importGraph(repository, graphmap, target_uri) {
