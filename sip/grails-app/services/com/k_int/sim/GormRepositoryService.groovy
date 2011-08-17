@@ -190,14 +190,30 @@ class GormRepositoryService {
               // In the database implementation, scalar properties can only have a single value.
               // Here we need to get some information about the actual type of the property.
               def propinfo = domain_class_definition.getPropertyByName(prop.key)
+
               if ( propinfo.oneToMany || propinfo.manyToMany ) {
-                log.debug("Process collection property");
+                log.debug("Process collection property ${propinfo.typePropertyName}");
                 // Cycle through the prop.value.values, testing the metamodel of each entry for new/updated records.
-                prop.value.values.each { col_obj ->
-                  if ( col_obj.__metamodel.status == 'new' ) {
-                    log.debug("Resolve ${col_obj.resource} and add it to this collection property");
-                    resource[prop.key].add(resolveURI(col_obj.resource))
-                  }
+                switch ( propinfo.typePropertyName ) {
+                  case 'list':
+                    // There are no restrictions to how many times a resource can be added to a list. The index into the
+                    // list is the primary way of addressing collection members
+                    prop.value.values.each { col_obj ->
+                      if ( col_obj.__metamodel.status == 'new' ) {
+                        log.debug("Resolve ${col_obj.resource} and add it to this list property");
+                        resource[prop.key].add(resolveURI(col_obj.resource))
+                      }
+                    }
+                    break;
+                  case 'set':
+                    log.warn("Unhandled collection type : set");
+                    break;
+                  case 'map':
+                    log.warn("Unhandled collection type : map");
+                    break;
+                  default:
+                    log.error("Unhandled property type ${propinfo.typePropertyName} for ${prop.key}");
+                    break; 
                 }
               }
               else {
@@ -381,8 +397,12 @@ class GormRepositoryService {
               // We are serialising a collection. A number of things need to happen. We treat everything as a list for now.
               def collection_items_list = []
               obj[pprop.name]?.each { collection_item ->
-                // If the collection_item is a persistent class, then we simply add a reference to the URI of the resource.
-                collection_items_list.add([reference:"uri:gorm:${collection_item.class.name}:${collection_item.id}", __metamodel:[status:'ok']])
+                // If the collection_item is a persistent class, then we simply add a reference to the URI of the resource.GrailsNameUtils.getProperty(entity.class)
+                def resource_class_name = collection_item.class.name
+                def i = resource_class_name.indexOf('_$$_javassist')
+                if ( i > -1 )
+                   resource_class_name = resource_class_name[0..i-1]
+                collection_items_list.add([reference:"uri:gorm:${resource_class_name}:${collection_item.id}", __metamodel:[status:'ok']])
                 // Otherwise, we need to add a blank node to the graph and serialize the data.
               }
               graph_object[pprop.name] = [values: collection_items_list]

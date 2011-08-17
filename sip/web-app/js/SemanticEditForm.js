@@ -511,9 +511,11 @@ function createAssocListControl(parent_element,
     headers.append("<th>"+coldef.label+"</th>");
   }
 
+  // Add all the rows from the input graph into the main display table. For each resource, call addAssocRowForResource.
   for ( v in values ) {
     var value = values[v];
-    tbody.append("<tr><td>"+value.reference+"</td></tr>");
+    addAssocRowForResource(value.reference, tbody);
+    // tbody.append("<tr><td>"+value.reference+"</td></tr>");
   }
 
   // We now add a footer row with a button to pop up an add dialog (Search for rows / create)
@@ -531,7 +533,7 @@ function createAssocListControl(parent_element,
   // JQuery data table for results.
   var input_tableJQ = $(document.createElement("table"));
   var input_table_theadJQ = $(document.createElement("thead"));
-  var input_table_tbodyJQ = $(document.createElement("thead"));
+  var input_table_tbodyJQ = $(document.createElement("tbody"));
   var label_rowJQ = $(document.createElement("tr"));
   var input_rowJQ = $(document.createElement("tr"));
 
@@ -599,7 +601,7 @@ function createAssocListControl(parent_element,
   popup_info.results_tbodyJQ = input_table_tbodyJQ;
 
   popupDivJQ.append(input_tableJQ);
-  
+
   // add row popup
   var table_add_dialog = popupDivJQ.dialog({
               autoOpen: false,
@@ -617,6 +619,10 @@ function createAssocListControl(parent_element,
   });
 
   // Final step is to paint the text boxes that will act as the search / create controls
+}
+
+function addAssocRowForResource(resource_uri, parent_tbodyJQ) {
+  parent_tbodyJQ.append("<tr><td>"+resource_uri+"</td></tr>");
 }
 
 function popupControlsChanged(popup_id) {
