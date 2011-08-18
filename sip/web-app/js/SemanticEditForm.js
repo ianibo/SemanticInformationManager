@@ -501,10 +501,11 @@ function createAssocListControl(parent_element,
 
   var table_control_id = "fc"+(the_model.__form_control_counter++);
   var cc = parent_element.append("<li>New assoc_list \""+propdef.control+"\" label: "+propdef.label+" of type "+propdef.type+
-                                 "<table><thead><tr id=\""+table_control_id+"_h\"><th>child uri</th></tr></thead><tbody id=\""+table_control_id+"_b\"></tbody></table>"+
+                                 "<table><thead><tr id=\""+table_control_id+"_h\"><th>child uri</th></tr></thead><tbody id=\""+table_control_id+"_b\"></tbody><tfoot id=\""+table_control_id+"_f\"></tfoot></table>"+
                                  "</li>");
   var headers = $("#"+table_control_id+"_h")
   var tbody = $("#"+table_control_id+"_b")
+  var tfoot = $("#"+table_control_id+"_f")
 
   for ( c in propdef.cols ) {
     var coldef = propdef.cols[c];
@@ -518,7 +519,7 @@ function createAssocListControl(parent_element,
   }
 
   // We now add a footer row with a button to pop up an add dialog (Search for rows / create)
-  tbody.append("<tr id=\""+table_control_id+"_f\"><td colspan=\""+propdef.cols.length+"\"><button type=\"button\" id=\""+table_control_id+"_button\">Add</button></td></tr>");
+  tfoot.append("<tr id=\""+table_control_id+"_f\"><td colspan=\""+propdef.cols.length+"\"><button type=\"button\" id=\""+table_control_id+"_button\">Add</button></td></tr>");
 
   var popupDivJQ=$(document.createElement("div"));
   popupDivJQ.attr("id",""+table_control_id+"_popup");
@@ -740,9 +741,10 @@ function linkObjectToCollection(resource_to_add_uri, target_resource_uri, target
   // property is a property_model and contains a list of all the <li> entries that show lists from this collection property (__metamodel.property_value_containers)
   // We iterate over each of those, get hold of the tbody, and append the appropriate row
   for ( c in property.__metamodel.property_value_containers ) {
-    var owner_li = property.__metamodel.property_value_containers[c];
-    owner_li.append(resource_uri);
-    // addAssocRowForResource(resource_uri, parent_tbodyJQ, target_repository_id, propdef)
+    var owner_ul = property.__metamodel.property_value_containers[c];
+    $("li > table > tbody",owner_ul).append("<tr><td>"+resource_to_add_uri+"</td></tr>");
+    // owner_ul.append(resource_to_add_uri);
+    // addAssocRowForResource(resource_to_add_uri, $("li > table > tbody",owner_ul), target_repository_id, propdef)
   }
 }
 
