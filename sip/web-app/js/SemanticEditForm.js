@@ -92,7 +92,7 @@ function makeSIMEditor(editor_id,
   if ( target_uri ) {
     console.log("target_uri is present, load object");
     the_model.__root_graph_uri = target_uri;
-    importGraph(target_repository_id, the_model.__graphmap, target_uri);
+    importGraph(target_repository_id, target_uri);
     the_model.__graphmap[the_model.__root_graph_uri].__metamodel = {status:"ok", types:root_types};
   }
   else {
@@ -514,8 +514,7 @@ function createAssocListControl(parent_element,
   // Add all the rows from the input graph into the main display table. For each resource, call addAssocRowForResource.
   for ( v in values ) {
     var value = values[v];
-    addAssocRowForResource(value.reference, tbody);
-    // tbody.append("<tr><td>"+value.reference+"</td></tr>");
+    addAssocRowForResource(value.reference, tbody, target_repository_id, propdef);
   }
 
   // We now add a footer row with a button to pop up an add dialog (Search for rows / create)
@@ -621,8 +620,23 @@ function createAssocListControl(parent_element,
   // Final step is to paint the text boxes that will act as the search / create controls
 }
 
-function addAssocRowForResource(resource_uri, parent_tbodyJQ) {
-  parent_tbodyJQ.append("<tr><td>"+resource_uri+"</td></tr>");
+function addAssocRowForResource(resource_uri, parent_tbodyJQ, target_repository_id, propdef) {
+
+  // We need to get the object relating to this uri..
+  var res = getResource(target_repository_id, resource_uri);
+  var row = $(document.createElement("tr"));
+  row.append("<td>"+resource_uri+"</td>");
+  for ( c in propdef.cols ) {
+    var coldef = propdef.cols[c];
+    var prop = res[coldef.property_uri];
+    if ( prop != null ) {
+      row.append("<td>"+prop.values[0].value+"</td>");
+    }
+    else {
+      row.append("<td></td>");
+    }
+  }
+  parent_tbodyJQ.append(row);
 }
 
 function popupControlsChanged(popup_id) {
@@ -717,12 +731,25 @@ function linkObjectToCollection(resource_to_add_uri, target_resource_uri, target
   //   which indicates the status of that entry. "OK" or "New" or "Updated" or "Removed"
   var object_info = the_model.__graphmap[target_resource_uri];
   var property = object_info[target_property_uri];
+
+  // Now we need to iterate through the properties in this template controller
+
   property.values.push({'resource':resource_to_add_uri, '__metamodel':{'status':'new'}});
 }
 
-function importGraph(repository, graphmap, target_uri) {
+function getResource(repository, target_uri) {
+  console.log("getResource "+target_uri);
+  var result = the_model.__graphmap[target_uri];
+  if ( result == null ) {
+    importGraph(repository,target_uri);
+    result = the_model.__graphmap[target_uri];
+  }
+  return result;
+}
+
+function importGraph(repository, target_uri) {
   var url = the_model.__base_url+"data/graph?repo="+repository+"&uri="+target_uri;
-  console.log("get graph "+url);
+  console.log("import graph "+url);
 
   $.ajax({
     type: 'GET',
