@@ -735,6 +735,15 @@ function linkObjectToCollection(resource_to_add_uri, target_resource_uri, target
   // Now we need to iterate through the properties in this template controller
 
   property.values.push({'resource':resource_to_add_uri, '__metamodel':{'status':'new'}});
+
+  // Now, for all controls attached to this property, we need to add a physical row to any tables representing that property
+  // property is a property_model and contains a list of all the <li> entries that show lists from this collection property (__metamodel.property_value_containers)
+  // We iterate over each of those, get hold of the tbody, and append the appropriate row
+  for ( c in property.__metamodel.property_value_containers ) {
+    var owner_li = property.__metamodel.property_value_containers[c];
+    owner_li.append(resource_uri);
+    // addAssocRowForResource(resource_uri, parent_tbodyJQ, target_repository_id, propdef)
+  }
 }
 
 function getResource(repository, target_uri) {
