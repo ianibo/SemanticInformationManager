@@ -49,7 +49,9 @@ var the_model = {
 
   __popup_form_counter : 0,
 
-  __popup_form_info : {}
+  __popup_form_info : {},
+
+  __definitions_by_element : {}
 }
 
 //var general_type_layout = {
@@ -388,6 +390,8 @@ function addScalarControl(resource_uri,
     var c = propdef.__metamodel.property_value_containers[idx];
     var new_control_id = "fc"+(the_model.__form_control_counter++);
 
+    the_model.__definitions_by_element[new_control_id] = propdef;
+
     c.append("<li><input id=\""+new_control_id+"["+idx+
                                        "]\"  data-resource-uri=\""+resource_uri+
                                        "\" data-property=\""+property+
@@ -405,6 +409,8 @@ function createTextControl(parent_element,
   // new_control_id used to be just propdef.property_uri but decided an opaque generated id is better.
   var new_control_id = "fc"+(the_model.__form_control_counter++);
   var value = ""
+
+  the_model.__definitions_by_element[new_control_id] = propdef;
 
   console.log("create control, values = %o",values);
 
@@ -444,6 +450,8 @@ function createAssocComboControl(parent_element,
   if ( values.length > 0 ) {
     ref=values[0].reference;
   }
+
+  the_model.__definitions_by_element[new_control_id] = propdef;
 
   var cc = parent_element.append("<li><select id=\""+new_control_id+
                                           "\" data-resource-uri=\""+root_object_uri+
@@ -500,8 +508,11 @@ function createAssocListControl(parent_element,
                                 values) {
 
   var table_control_id = "fc"+(the_model.__form_control_counter++);
+
+  the_model.__definitions_by_element[table_control_id] = propdef;
+
   var cc = parent_element.append("<li>New assoc_list \""+propdef.control+"\" label: "+propdef.label+" of type "+propdef.type+
-                                 "<table><thead><tr id=\""+table_control_id+"_h\"><th>child uri</th></tr></thead><tbody id=\""+table_control_id+"_b\"></tbody><tfoot id=\""+table_control_id+"_f\"></tfoot></table>"+
+                                 "<table id=\""+table_control_id+"\"><thead><tr id=\""+table_control_id+"_h\"><th>child uri</th></tr></thead><tbody id=\""+table_control_id+"_b\"></tbody><tfoot id=\""+table_control_id+"_f\"></tfoot></table>"+
                                  "</li>");
   var headers = $("#"+table_control_id+"_h")
   var tbody = $("#"+table_control_id+"_b")
@@ -568,7 +579,7 @@ function createAssocListControl(parent_element,
         // input_row.append("<td><input type=\"text\"/></td>");
         new_controlJQ = $(document.createElement("input"));
         new_controlJQ.attr("type","text");
-        new_controlJQ.attr("onkeyup","popupControlsChanged('"+popup_info_id+"');");
+        new_controlJQ.attr("onkeyup","popupControlsChanged('"+popup_info_id+"','"+table_control_id+"');");
         input_controls.push(new_controlJQ);
         break;
       case 'boolean':
@@ -576,7 +587,7 @@ function createAssocListControl(parent_element,
         new_controlJQ = $(document.createElement("input"));
         new_controlJQ.attr("type","checkbox");
         new_controlJQ.attr("value","true");
-        new_controlJQ.attr("onchange","popupControlsChanged('"+popup_info_id+"');");
+        new_controlJQ.attr("onchange","popupControlsChanged('"+popup_info_id+"','"+table_control_id+"');");
         input_controls.push(new_controlJQ);
         break;
       default:
@@ -640,7 +651,7 @@ function addAssocRowForResource(resource_uri, parent_tbodyJQ, target_repository_
   parent_tbodyJQ.append(row);
 }
 
-function popupControlsChanged(popup_id) {
+function popupControlsChanged(popup_id, control_id) {
   var popup_info = the_model.__popup_form_info[popup_id];
   var msg = "Changes to popup "+popup_id;
 
@@ -667,6 +678,7 @@ function popupControlsChanged(popup_id) {
   popup_info.results_tbodyJQ.empty();
 
   performPopupSearch(the_model.__target_repository_id,
+                     control_id,
                      popup_info.propdef.refTypeURI,
                      popup_info.propdef.property_uri,
                      popup_info.root_object_uri,
@@ -680,6 +692,7 @@ function popupControlsChanged(popup_id) {
 
 // parent_tbody is the parent table body to which the data rows should be appended.
 function performPopupSearch(repository, 
+                            control_id,
                             type_uri, 
                             property_uri, 
                             root_object_uri,
@@ -702,7 +715,7 @@ function performPopupSearch(repository,
         for ( val in result[i] ) {
           if ( val == 'uri' ) {
             // Link actions
-            new_trJQ.append("<td><a href=\"javascript:linkObjectToCollection('"+result[i][val]+"','"+root_object_uri+"','"+property_uri+"');\">Add</a></td>");
+            new_trJQ.append("<td><a href=\"javascript:linkObjectToCollection('"+repository+"','"+result[i][val]+"','"+root_object_uri+"','"+property_uri+"');\">Add</a></td>");
           }
           else {
             new_trJQ.append("<td>"+result[i][val]+"</td>");
@@ -719,7 +732,7 @@ function performPopupSearch(repository,
   });
 }
 
-function linkObjectToCollection(resource_to_add_uri, target_resource_uri, target_property_uri) {
+function linkObjectToCollection(target_repository_id, resource_to_add_uri, target_resource_uri, target_property_uri) {
   alert("link "+resource_to_add_uri+" to collection identified by property "+target_property_uri+" of resource "+target_resource_uri);
   // Check that the item is not already in the collection
   // Add it if present
@@ -742,9 +755,15 @@ function linkObjectToCollection(resource_to_add_uri, target_resource_uri, target
   // We iterate over each of those, get hold of the tbody, and append the appropriate row
   for ( c in property.__metamodel.property_value_containers ) {
     var owner_ul = property.__metamodel.property_value_containers[c];
-    $("li > table > tbody",owner_ul).append("<tr><td>"+resource_to_add_uri+"</td></tr>");
+
+
+    // Every table contains a link to the definition via __definitions_by_element of the_model. The value can be found in the tables id attr
+    var propdef_id = $("li > table",owner_ul).attr("id");
+    var propdef = the_model.__definitions_by_element[propdef_id];
+
+    // $("li > table > tbody",owner_ul).append("<tr><td>"+resource_to_add_uri+" "+propdef_id+"</td></tr>");
     // owner_ul.append(resource_to_add_uri);
-    // addAssocRowForResource(resource_to_add_uri, $("li > table > tbody",owner_ul), target_repository_id, propdef)
+    addAssocRowForResource(resource_to_add_uri, $("li > table > tbody",owner_ul), target_repository_id, propdef)
   }
 }
 
