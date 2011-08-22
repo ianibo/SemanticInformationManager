@@ -12,7 +12,12 @@ class GormRepositoryService {
     // Generate a dynamic template edit for the identified context.
     String generateDynamicEditTemplate(SIPContext ctx) {
 
+
+      def empty_tab = [element_id:'tab2',label:ctx.defaultType,properties:[]]
       def new_layout = [:]
+
+      def layout_tabs = [new_layout,empty_tab]
+
       new_layout.element_id='tab1'
       new_layout.label=ctx.defaultType
       new_layout.properties = []
@@ -86,7 +91,7 @@ class GormRepositoryService {
         log.error("Unable to locate domain class ${ctx.defaultType}")
       }
 
-      def converter = new_layout as JSON;
+      def converter = layout_tabs as JSON;
       def json_string = converter.toString()
 
       return json_string

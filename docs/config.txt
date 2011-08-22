@@ -1,0 +1,57 @@
+An example layout for an "Information Provider"
+
+{
+  "element_id":"tab1",
+  "label":"Information Provider",
+  "properties":[
+       {"control":"text","mandatory":false,"label":"Contact Email","type":"string","property_uri":"contactEmail","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Contact Fax","type":"string","property_uri":"contactFax","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Contact Telephone","type":"string","property_uri":"contactTelephone","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Dependent Locality","type":"string","property_uri":"dependentLocality","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Dependent Thoroughfare","type":"string","property_uri":"dependentThoroughfare","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Description","type":"string","property_uri":"description","cardinality":"1"},
+       {"control":"text","mandatory":true,"label":"Email","type":"string","property_uri":"email","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Provider Icon URL","type":"string","property_uri":"iconURL","cardinality":"1"},
+       {"control":"text","mandatory":true,"label":"Provider Identifier","type":"string","property_uri":"identifier","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Locality","type":"string","property_uri":"locality","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Name","type":"string","property_uri":"name","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Office","type":"string","property_uri":"office","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Postcode","type":"string","property_uri":"postcode","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Region","type":"string","property_uri":"region","cardinality":"1"},
+       {"control":"text","mandatory":true,"label":"Short Code","type":"string","property_uri":"shortCode","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Display Logo","type":"boolean","property_uri":"showLogo","cardinality":"1"},
+       {"control":"text","mandatory":false,"label":"Source Disclaimer Text","type":"string","property_uri":"sourceDisclaimer","cardinality":"1"},
+
+       {"displayProps":["code","description"],
+        "control":"assoc_combo",
+        "mandatory":false,
+        "refTypeURI":"uri:gorm:com.k_int.iep.datamodel.IEPSubscriptionType",
+        "label":"Subscription Type",
+        "type":"iEPSubscriptionType",
+        "property_uri":"subscriptionType",
+        "cardinality":"1"},
+
+       {"control":"text","mandatory":false,"label":"Thooughfare","type":"string","property_uri":"thoroughfare","cardinality":"1"},
+
+       {"control":"assoc_list",
+        "cols":[
+            {"mandatory":false,"label":"Actions","type":"string","property_uri":"actionHash"},
+            {"mandatory":false,"label":"Date Created","type":"date","property_uri":"dateCreated"},
+            {"mandatory":true,"label":"Enabled","type":"boolean","property_uri":"enabled"},
+            {"mandatory":false,"label":"Expiration","type":"date","property_uri":"expiration"},
+            {"mandatory":true,"label":"External","type":"boolean","property_uri":"external"},
+            {"mandatory":true,"label":"Federated","type":"boolean","property_uri":"federated"},
+            {"mandatory":false,"label":"Last Updated","type":"date","property_uri":"lastUpdated"},
+            {"mandatory":false,"label":"Password Hash","type":"string","property_uri":"passwordHash"},
+            {"mandatory":false,"label":"Realm","type":"string","property_uri":"realm"},
+            {"mandatory":true,"label":"RemoteAPI","type":"boolean","property_uri":"remoteapi"},
+            {"mandatory":true,"label":"User Name","type":"string","property_uri":"username"}],
+        "mandatory":false,
+        "refTypeURI":"uri:gorm:grails.plugins.nimble.core.UserBase",
+        "allowCreate":false,
+        "label":"Users",
+        "type":"list",
+        "property_uri":"users",
+        "cardinality":" 1:m"}
+    ]
+}

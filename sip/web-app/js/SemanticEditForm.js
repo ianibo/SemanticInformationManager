@@ -104,21 +104,19 @@ function makeSIMEditor(editor_id,
     the_model.__graphmap[the_model.__root_graph_uri].__metamodel = {status:"new", types:root_types};
   }
 
-  var general_info_panel = buildFormPanel(template, 
-                                          root_element, 
-                                          the_model.__root_graph_uri,
-                                          target_repository_id)
+  // Add each tab defined in the template
+  for ( panel in template ) {
+    var general_info_panel = buildFormPanel(template[panel], 
+                                            root_element, 
+                                            the_model.__root_graph_uri,
+                                            target_repository_id)
 
-  // Add the generic details tab
-  // Working from http://jqueryui.com/demos/tabs/#...immediately_select_a_just_added_tab
-  // and http://blog.favrik.com/2009/08/11/dynamically-adding-jquery-tabs-round2/
-  // tab_control.tabs('add','#'+general_type_layout.element_id,general_type_layout.tab_name);
-  tab_control.tabs('add','#'+template.element_id,template.label);
-
-  //tab_control.tabs('add','#default',"Default Properties");
-  //tab_control.tabs('add','#t1',"Default Properties1");
-  //tab_control.tabs('add','#t2',"Default Properties2");
-  //tab_control.tabs('add','#t3',"Default Properties3");
+    // Add the generic details tab
+    // Working from http://jqueryui.com/demos/tabs/#...immediately_select_a_just_added_tab
+    // and http://blog.favrik.com/2009/08/11/dynamically-adding-jquery-tabs-round2/
+    // tab_control.tabs('add','#'+general_type_layout.element_id,general_type_layout.tab_name);
+    tab_control.tabs('add','#'+template[panel].element_id,template[panel].label);
+  }
 }
 
 
