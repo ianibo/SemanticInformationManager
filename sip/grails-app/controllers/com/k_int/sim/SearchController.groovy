@@ -64,7 +64,13 @@ class SearchController {
           
           def results_row = [:]
           results_row.v = []
-          results_row.uri = "uri:gorm:${r.class.name}:${r.id}"
+
+          def resource_class_name = r.class.name;
+          def i = resource_class_name.indexOf('_$$_javassist')
+          if ( i > -1 )
+            resource_class_name = resource_class_name[0..i-1]
+
+          results_row.uri = "uri:gorm:${resource_class_name}:${r.id}"
           result.results.add(results_row)
           result.search_form_model.search_columns.each { sc  ->
             results_row.v.add([v:Eval.x(r, 'x.' + sc.property),selaction:sc.selaction])
