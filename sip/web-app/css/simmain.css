@@ -1,9 +1,15 @@
 html * {
     margin: 0;
-    /*padding: 0; SELECT NOT DISPLAYED CORRECTLY IN FIREFOX */
+    font: normal 1em/1.5em Arial, Helvetica, sans-serif;
 }
 
 /* GENERAL */
+
+ul
+{
+	font-size: 14px;
+}
+
 
 .spinner {
     padding: 5px;
@@ -15,9 +21,6 @@ body {
     background: #fff;
     color: #333;
     font: 11px verdana, arial, helvetica, sans-serif;
-
-    /* margin: auto;
-    width: 960px; */
     margin-left: 10px;
     margin-right: 10px;
     width: auto;
@@ -31,42 +34,20 @@ body {
 #simmain {
   width: 100%;
   margin: 5px;
-  /* border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  background: #f3f3f3; */
-}
-
-#simnav {
-    margin-left:-175px; /* "left col" width */
-    margin-top:5px;
-    margin-bottom:5px;
-    width:150px;
 }
 
 div.graypanel {
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-    /*margin-left: 20px auto 10px;
-    margin-top: 20px auto 10px;
-    margin-bottom: 20px auto 10px;*/
     background: #f3f3f3;
     padding: 10px;
 }
 
 
 #simmainlayout {
-    padding-left:175px; /* "left col" width */ 
-    /* padding-right:150px; */ /* "right col" width */
-}
-
-ul.plainlist {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    padding-left:10px;
-    border: none;
+    padding-left:225px; /* "left col" width */ 
+    position: relative;
 }
 
 .popup {
@@ -76,7 +57,6 @@ ul.plainlist {
     width:600px;
     background:#FFFFFF;
     border:2px solid #cecece;
-/*    z-index:2;*/
     padding:10px;
     overflow: scroll;
 }
@@ -86,5 +66,63 @@ ul.plainlist {
 }
 
 
+/* Nav */
 
+#simnav {
+    left: 0;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    position: absolute;
+    width: 200px;
+}
+
+ul.plainlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-left:16px;
+    border: none;
+}
+
+ul ul {
+	margin: 5px 5px 5px 12px;
+	display:none;
+}
+
+ul ul ul * {
+	line-height: 16px;
+}
+
+ul a:link {
+	text-decoration: none;
+	color: #333333;
+}
+
+ul a:hover {
+	color: #00749d;
+}
+
+ul h4.active, ul h3.active {
+	background: transparent url(../images/arrow_blue_right.png) left center no-repeat;
+	padding-left: 16px;
+	color: #00749d;
+}
+
+ul h4.active:hover, ul h3.active:hover {
+	background: transparent url(../images/arrow_blue_right.png) left center no-repeat;
+}
+
+ul h3, ul h4 {
+	/*background: transparent url(../images/arrow_gray_right.png) left center no-repeat;*/
+	padding-left: 4px;
+	font-size: 14px;
+	line-height: 16px;
+	cursor:pointer;
+}
+
+ul h3:hover, ul h4:hover {
+	background: transparent url(../images/arrow_blue_right.png) left center no-repeat;
+	color: #00749d;
+	padding-left: 16px;
+}
 
