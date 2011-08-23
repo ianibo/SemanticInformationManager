@@ -123,7 +123,7 @@ class GormRepositoryService {
         new_template.access_points.add([propname:"id",proptype:"long"])
 
         new_template.search_columns.add([property:"id",selaction:'__edit'])
-        new_template.search_columns.add([property:"class.name"])
+        // new_template.search_columns.add([property:"class.name"])
 
         target_class_info.getPersistentProperties().each { pprop ->
           // println "${pprop}..."
