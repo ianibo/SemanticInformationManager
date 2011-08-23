@@ -1,7 +1,6 @@
 <html>
     <head>
         <title>IEP - Information Enhancement Portal</title>
-        <link type="text/css" rel="stylesheet" href="http://yui.yahooapis.com/3.3.0/build/cssfonts/fonts-min.css" />
         <meta name="layout" content="simmain"/>
     </head>
     <body>
