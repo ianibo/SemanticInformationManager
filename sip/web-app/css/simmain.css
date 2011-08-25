@@ -20,7 +20,7 @@ ul
 body {
     background: #fff;
     color: #333;
-    font: 11px verdana, arial, helvetica, sans-serif;
+    font: 14px verdana, arial, helvetica, sans-serif;
     margin-left: 10px;
     margin-right: 10px;
     width: auto;
@@ -33,6 +33,7 @@ body {
 
 #simmain {
   width: 100%;
+  margin-top: 5px;
 }
 
 div.graypanel {
@@ -64,13 +65,16 @@ div.graypanel {
     display: none;
 }
 
+#searchresults
+{
+	margin-top: 5px;
+}
+
 
 /* Nav */
 
 #simnav {
     left: 0;
-    margin-bottom: 5px;
-    margin-top: 5px;
     position: absolute;
     width: 200px;
 }
