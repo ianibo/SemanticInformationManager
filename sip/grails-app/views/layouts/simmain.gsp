@@ -15,8 +15,7 @@
     <body>
       <div id="simheader">
         <div class="graypanel" style="width:100%">
-          <div style="float:right;">Welcome back ${user.username}</div>
-          <div>Semantic Information Portal</div>
+          <div><img src="${resource(dir:'images',file:'SIP.png')}" height="30px"/><span>Semantic Information Portal</span><span style="float:right;line-height:30px;">Welcome back ${user.username}</span></div>
         </div>
       </div>
 
@@ -68,9 +67,8 @@
 			//toggle visibility of location on the nav bar
 			$('a[href="' + url +'"]').parent().parent().prev().addClass('active').next().toggle() //toggle 
 									 .parent().parent().prev().addClass('active').next().toggle(); //toggle
-			
-						
-			$('ul h4, ul h3').click(function()
+								
+			$('#simnav ul h4, #simnav ul h3').click(function()
 			{
 				//$('h4.active').removeClass('active').next().toggle();
 				$(this).next().toggle();	
