@@ -1,0 +1,35 @@
+<plugin name='sip' version='0.1' grailsVersion='1.3.7 &gt; *'>
+  <author>Your name</author>
+  <title>Plugin summary/headline</title>
+  <description>\
+Brief description of the plugin.
+</description>
+  <documentation>http://grails.org/plugin/sip</documentation>
+  <resources>
+    <resource>BuildConfig</resource>
+    <resource>Config</resource>
+    <resource>DataSource</resource>
+    <resource>SIPUrlMappings</resource>
+    <resource>UrlMappings</resource>
+    <resource>com.k_int.sim.DataController</resource>
+    <resource>com.k_int.sim.HomeController</resource>
+    <resource>com.k_int.sim.ResourceController</resource>
+    <resource>com.k_int.sim.SearchController</resource>
+    <resource>com.k_int.sim.TemplateController</resource>
+    <resource>com.k_int.sim.WorkspaceController</resource>
+    <resource>com.k_int.sip.domain.DynamicSIPEditTemplate</resource>
+    <resource>com.k_int.sip.domain.DynamicSIPSearchTemplate</resource>
+    <resource>com.k_int.sip.domain.GormSIPRepository</resource>
+    <resource>com.k_int.sip.domain.SIPContext</resource>
+    <resource>com.k_int.sip.domain.SIPEditTemplate</resource>
+    <resource>com.k_int.sip.domain.SIPRepository</resource>
+    <resource>com.k_int.sip.domain.SIPSearchTemplate</resource>
+    <resource>com.k_int.sip.domain.StaticSIPSearchTemplate</resource>
+    <resource>com.k_int.sim.DomainModelInfoService</resource>
+    <resource>com.k_int.sim.GormRepositoryService</resource>
+    <resource>com.k_int.sim.OntologyService</resource>
+    <resource>com.k_int.sim.WorkspaceService</resource>
+  </resources>
+  <dependencies />
+  <behavior />
+</plugin>

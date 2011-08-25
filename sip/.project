@@ -10,10 +10,23 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.maven.ide.eclipse.maven2Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
-	    <nature>com.springsource.sts.grails.core.nature</nature>
+		<nature>org.maven.ide.eclipse.maven2Nature</nature>
+		<nature>com.springsource.sts.grails.core.nature</nature>
 		<nature>org.eclipse.jdt.groovy.core.groovyNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>.link_to_grails_plugins</name>
+			<type>2</type>
+			<locationURI>GRAILS_ROOT/1.3.7/projects/sip/plugins</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

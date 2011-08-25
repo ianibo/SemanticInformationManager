@@ -13,8 +13,11 @@ class ConfigurationService implements org.springframework.context.ApplicationCon
     def sip_config_folder = applicationContext.getResource("classpath:/sip");
     log.debug("sip_config_folder: ${sip_config_folder}");
 
-    if ( sip_config_folder != null ) {
+	log.debug("sip_config_folder exists : " + sip_config_folder.exists());
+	
+    if ( sip_config_folder != null && sip_config_folder.exists()) {
       def sip_file = sip_config_folder.getFile();
+
       if ( sip_file != null ) {
         log.debug("Loading config files from sip config area");
         loadConfigFiles(sip_file);
