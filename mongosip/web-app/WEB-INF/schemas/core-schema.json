@@ -1,6 +1,6 @@
 {
 	"id" : "http://json-schema.org/schema#",
-        "definedby" : http://json-schema.org/schema#",
+        "definedby" : "http://json-schema.org/schema#",
 	"type" : ["object","string"],
 	"format": "uri",
 	
