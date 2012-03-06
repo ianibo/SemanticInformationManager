@@ -29,12 +29,28 @@ class BootStrap {
         log.debug("Checking ${schema_file}");
         // Parse JSON file
         def j = JSON.parse(new java.io.FileReader(schema_file));
-        log.debug(j);
+
+        if ( j.id && j.definedby ) {
+          log.debug("Schema has both id(${j.id}) and definedby(${j.definedby})...");
+          def schema_in_db = db.schemas.findOne(id:'http://json-schema.org/schema#',definedby:'http://json-schema.org/schema#');
+          if ( schema_in_db == null ) {
+            log.debug("Saving schema....");
+            db.schemas.save(j);
+          }
+          else {
+            log.debug("Schema already present: ${schema_in_db._id}");
+          }
+        }
+        else {
+          log.debug("Schema missing one or both of id(${j.id}) and definedby(${j.definedby})...");
+        }
+
       }
     }
 
     // 1. See if we can locate an object definedby "http://json-schema.org/schema#" and with the id "http://json-schema.org/schema#" in the mongo repository
     // If not, load it.
     // def core_schema = db.schemas.findOne(id:'http://json-schema.org/schema#',definedby:'http://json-schema.org/schema#');
+    log.debug("Setup completed\n");
   }
 }
