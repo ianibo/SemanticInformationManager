@@ -1,0 +1,54 @@
+{
+  rootLayout:'main',
+  layoutDescriptions:[
+    {
+      id:'main',
+      container : {
+        type:'Tabs'
+        content:[
+          {
+            type:'Panel',
+            label:'Simple Address',
+            layout:'SimpleForm',
+            comment:'This form is simple name value pairs',
+            content:[
+              { type:'label', constraint:'newline', text:'Org Name' },
+              { type:'text', property:'propOne' },
+              { type:'label', constraint:'newline', text:'Address' },
+              { type:'text', property:'addrLine1' },
+              { type:'text', property:'addrLine2' },
+              { type:'text', property:'addrLine3' },
+              { type:'label', constraint:'newline', text:'Postcode' },
+              { type:'text', property:'postcode' },
+            ]
+          },
+          {
+            type:'Panel',
+            label:'Repeating Groups By Subform',
+            layout:'SimpleForm',
+            content:[
+              { type:'label', constraint:'newline', text:'Contacts' },
+              { type:'repeatableGroup', property:'contacts', contentRef:'ContactSubForm' }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      id:'ContactSubForm',
+      container : {
+        type:'Panel',
+        layout:'SimpleForm',
+        content:[
+          { type:'label', constraint:'newline', text:'Contact Name' },
+          { type:'text', property:'contactName' },
+          { type:'label', constraint:'newline', text:'Telephone' },
+          { type:'text', property:'telephone' },
+          { type:'label', constraint:'newline', text:'Email' },
+          { type:'text', property:'email' },
+        ]
+      }
+    }
+
+  ]
+}
