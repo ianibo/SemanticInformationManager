@@ -30,7 +30,29 @@
               { type:'label', constraint:'newline', text:'Contacts' },
               { type:'repeatableGroup', property:'contacts', contentRef:'ContactSubForm' }
             ]
+          },
+          {
+            type:'Panel',
+            label:'',
+            container : {
+              type:'Panel',
+              layout:'SimpleForm',
+              content:[
+                { type:'label', constraint:'newline', text:'Contact Name' },
+                { type:'ListView', property:'contactName', listProps:['contactName','telephone','email'] },
+              ]
+            }
+          },
+          {
+            type:'Panel',
+            label:'Recursive Repeating Group',
+            layout:'SimpleForm',
+            content:[
+              { type:'label', constraint:'newline', text:'Contacts' },
+              { type:'repeatableGroup', property:'contacts', contentRef:'RecursiveContactSubForm' }
+            ]
           }
+
         ]
       }
     },
@@ -48,7 +70,23 @@
           { type:'text', property:'email' },
         ]
       }
-    }
-
+    },
+    {
+      id:'RecursiveContactSubForm',
+      container : {
+        type:'Panel',
+        layout:'SimpleForm',
+        content:[
+          { type:'label', constraint:'newline', text:'Contact Name' },
+          { type:'text', property:'contactName' },
+          { type:'label', constraint:'newline', text:'Telephone' },
+          { type:'text', property:'telephone' },
+          { type:'label', constraint:'newline', text:'Email' },
+          { type:'text', property:'email' },
+          { type:'label', constraint:'newline', text:'Contacts Contacts' },
+          { type:'repeatableGroup', property:'contacts', contentRef:'RecursiveContactSubForm' }
+        ]
+      }
+    },
   ]
 }
